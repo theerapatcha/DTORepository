@@ -1,0 +1,7 @@
+\bin
+\obj
+*.user
+*.vspscc
+\project.lock.json
+*.nuget.props
+*.nuget.targets
