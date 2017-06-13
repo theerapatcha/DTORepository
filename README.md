@@ -28,9 +28,19 @@ class User
     public string FirstName { get; set; }
     public string LastName { get; set; }
     public int Age { get; set; }
+    public DateTime CreatedDate { get; set; }
+    public DateTime UpdatedDate { get; set; }
 }
 ```
-### Create an DTO
+## Create a Repository for CRUD operation
+##### Create Repository
+To perform any action on the datasource, this library encourages the repository pattern to be used. Each repository will bind with only one entity. Then, a user can perform any CRUD operation on this repository via Data Transfer Object(DTO).
+```csharp
+    RepositoryFactory repositoryFactory = new RepositoryFactory(yourDbContext);
+    IRepository<User> repository = repositoryFactory.CreateRepository<User>();
+```
+##### Create an DTO
+The DTOs is the heart of this library. To avoid having a lot of complicated logic and unmanaged source code, we can now push all DTO-related logic inside the DTO. First, Let start with a very simple DTO.
 ```csharp
 class UserDto : DTORepository.Models.DtoBase<User, UserDto>
 {
@@ -42,13 +52,7 @@ class UserDto : DTORepository.Models.DtoBase<User, UserDto>
     public int Age { get; set; }
 }
 ```
-### Create a Repository for CRUD operation
-##### Create Repository
-```csharp
-    RepositoryFactory repositoryFactory = new RepositoryFactory(yourDbContext);
-    IRepository<User> repository = repositoryFactory.CreateRepository<User>();
-```
-##### Create new User from UserDTO
+## Create new User from a UserDTO
 To create an object from dto
 ```csharp
 UserDto dto = new UserDto {
@@ -63,7 +67,7 @@ UserDto createdDto = status.Result;
 Assert.Equal(dto, createdDto); // dto can be accessed to get the newly created identifier
 ```
 
-##### Update user from UserDTO
+## Update user from UserDTO
 Since  we already have a user in the database (assume its Id is 1)
 
 ```csharp
@@ -105,11 +109,13 @@ Assert.Equal("johnd", updateDto.UserName);
 Assert.Equal(23, updateDto.Age);
 ```
 
-If we want to forbid a user from updating his password, we can use an attribute called ***IgnoreWritingForAttribute***
+If we want to forbid a user from updating his username, password, we can use an attribute called ***IgnoreWritingForAttribute***
 ```csharp
 class UserDto : DTORepository.Models.DtoBase<User, UserDto>
 {
     //...
+    [IgnoreWritingFor(ActionFlags.Update)]
+    public string UserName { get; set; }
     [IgnoreWritingFor(ActionFlags.Update)]
     public string Password { get; set; }
     //...
@@ -130,8 +136,46 @@ class UserDto : DTORepository.Models.DtoBase<User, UserDto>
 }
 ```
 ***Or, you can just create separate DTOs for each actions.***
-#### Read entities from datasource as DTOs
-##### Get one by its identifiers
+```csharp
+class UserCreateDto : DTORepository.Models.DtoBase<User, UserCreateDto>
+{
+    public int Id { get; set; }
+    public string UserName { get; set; }
+    public string Password { get; set; }
+}
+class UserUpdateDto : DTORepository.Models.DtoBase<User, UserUpdateDto>
+{
+    public int Id { get; set; }
+    public string FirstName { get; set; }
+    public string LastName { get; set; }
+    public int? Age { get; set; }
+}
+```
+#### Implement logics before the data is created or updated into the database
+```csharp
+class UserDto : DTORepository.Models.DtoBase<User, UserDto>
+{
+    //...
+    protected override ISuccessOrErrors<User> CreateDataFromDto(DbContext context, User target
+    {
+        var status = base.CreateDataFromDto(context, target);
+        var user = status.Result;
+        user.CreatedDate = DateTime.Now;
+        return status;
+    }
+    protected override ISuccessOrErrors<User> UpdateDataFromDto(DbContext context, User target, User original)
+    {
+        var status = base.UpdateDataFromDto(context, target, original);
+        var user = status.Result;
+        user.UpdatedDate = DateTime.Now;
+        return status;
+    }
+    //...
+}
+```
+
+## Read entities from datasource as DTOs
+### Get one by its identifiers
 ```csharp
 var status = repository.Get<UserDto>(1);
 UserDto userDto = status.Result;
@@ -155,12 +199,12 @@ class UserDto : DTORepository.Models.DtoBase<User, UserDto>
 ```
 Ps. Since the conversion process from entity to dto use the AutoMapper.ProjectTo() method, the operations that can be performed in EntityToDtoMapping are limited (https://github.com/AutoMapper/AutoMapper/wiki/Queryable-Extensions#supported-mapping-options)
 
-##### List entities by predicate
+### List entities by predicate
 ```csharp
 ISuccessOrErrors<IList<UserDto>> status = repository.Query<UserDto>(x => x.FirstName == "John");
 IList<UserDto> userDto = status.Result;
 ```
-##### Get queryable object of DTOs
+### Get queryable object of DTOs
 ```csharp
 IQueryable<UserDto> userDtoQuery = repository.List<UserDto>();
 ```
@@ -180,7 +224,7 @@ class UserDto : DTORepository.Models.DtoBase<User, UserDto>
     //...
 }
 ```
-In case of your DTO class contains an list of other DTOs. That nested DTOs will ignore fields based on the main action. For example, consider these requirements:
+In case of your DTO class contains lists of other DTOs as well. The fields in that nested DTOs will be ignore based on its main action. For example, considering these requirements:
 - When list blogs, the number of posts for that blog are requred to be displayed
 - When list posts, only the topics are required to be dispalyed
 
@@ -222,6 +266,11 @@ BlogDto blogDto = status.Result;
 // blogDto.Posts will be a list of PostDto
 // blogDto.NumberOfPost will be zero (since it is a default value of an int)
 // blogDto.Posts[i].Body will have a value because it considers the operation as Get(even the Posts field is a collection)
+```
+## Delete entities from datasource
+For the deletion, the DTO is not required. We can just pass an entity's identifiers as arguments.
+```csharp
+ISuccessOrErrors status = repository.Delete(1); // delete a User entity with Id of 1
 ```
 
 ### Transaction
