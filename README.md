@@ -85,14 +85,14 @@ If we want to update only some fields, by default the library will ignore mappin
 ```csharp
 class UserDto : DTORepository.Models.DtoBase<User, UserDto>
 {
-    ...
+    //...
     public int? Age { get; set; }
     // or
     public Nullable<int> Age { get; set; }
     // or
     [IgnoreMappingIfValue(0)]
     public int Age { get; set; }
-    ...
+    //...
 }
 UserDto dto = new UserDto {
     Id = 1,
@@ -109,24 +109,24 @@ If we want to forbid a user from updating his password, we can use an attribute 
 ```csharp
 class UserDto : DTORepository.Models.DtoBase<User, UserDto>
 {
-    ...
+    //...
     [IgnoreWritingFor(ActionFlags.Update)]
     public string Password { get; set; }
-    ...
+    //...
 }
 ```
 Additionally, it can be used with a create action too.
 ```csharp
 class UserDto : DTORepository.Models.DtoBase<User, UserDto>
 {
-    ...
+    //...
     [IgnoreWritingFor(ActionFlags.Create)]
     public string FirstName { get; set; }
     [IgnoreWritingFor(ActionFlags.Create)]
     public string LastName { get; set; }
     [IgnoreWritingFor(ActionFlags.Create)]
     public int Age { get; set; }
-    ...
+    //...
 }
 ```
 ***Or, you can just create separate DTOs for each actions.***
@@ -140,9 +140,9 @@ We can add a logic when the library retrieving entities from the datasource and 
 ```csharp
 class UserDto : DTORepository.Models.DtoBase<User, UserDto>
 {
-    ...
+    //...
     public String Name { get; set; }
-    ...
+    //...
     protected override Action<IMappingExpression<User, UserDto>> EntityToDtoMapping
     {
         get
@@ -171,13 +171,13 @@ Same as *create* or *update*, *get* or *list* can be treated as different action
 ```csharp
 class UserDto : DTORepository.Models.DtoBase<User, UserDto>
 {
-    ...
+    //...
     [IgnoreRetreivingFor(ActionFlags.Get | ActionFlags.List)]
     public string Password { get; set; }
-    ...
+    //...
     [IgnoreRetreivingFor(ActionFlags.List)]
     public int Age { get; set; }
-    ...
+    //...
 }
 ```
 In case of your DTO class contains an list of other DTOs. That nested DTOs will ignore fields based on the main action. For example, consider these requirements:
@@ -227,7 +227,7 @@ BlogDto blogDto = status.Result;
 ### Transaction
 Normally, every repository operation will perform **dbContext.SaveChanges()** on itself. However, if there is a requirement to perform many operations as a transaction, we can use the library's ***UnitOfWork*** implementation to wrap operations together as a single transaction.
 ```csharp
-...
+//...
 UnitOfWorkFactory unitOfWorkFactory = new UnitOfWorkFactory(dbContext);
 UnitOfWork uow = unitOfWorkFactory.CreateUnitOfWork();
 ISuccessOrErrors status = uow.Execute((dbContext) => {
@@ -237,14 +237,14 @@ ISuccessOrErrors status = uow.Execute((dbContext) => {
     return status;
 });
 Assert.True(status.IsValid); // indicate that transaction is completed
-...
+//...
 ```
 
 ### Dependency Injection with Autofac
 In your AutoFac startup config in App_Start folder of your project, add these lines
 ```csharp
 var builder = new ContainerBuilder();
-...
+//...
 builder.RegisterType<YourContextName>().As<DbContext>().InstancePerRequest();
 builder.RegisterAssemblyTypes(typeof(RepositoryFactory).Assembly).AsImplementedInterfaces();
 builder.RegisterAssemblyTypes(typeof(UnitOfWorkFactory).Assembly).AsImplementedInterfaces();
@@ -253,7 +253,7 @@ builder.RegisterGeneric(typeof(DetailService<>)).As(typeof(IDetailService<>));
 builder.RegisterGeneric(typeof(ListService<>)).As(typeof(IListService<>));
 builder.RegisterGeneric(typeof(DeleteService<>)).As(typeof(IDeleteService<>));
 builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
-...
+//...
 ```
 
 ### Tech
