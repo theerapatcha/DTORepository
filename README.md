@@ -32,14 +32,14 @@ class User
     public DateTime UpdatedDate { get; set; }
 }
 ```
-## Create a Repository for CRUD operation
-##### Create Repository
+## Create a Repository and a DTO for CRUD operation
+##### Create a Repository
 To perform any action on the datasource, this library encourages the repository pattern to be used. Each repository will bind with only one entity. Then, a user can perform any CRUD operation on this repository via Data Transfer Object(DTO).
 ```csharp
     RepositoryFactory repositoryFactory = new RepositoryFactory(yourDbContext);
     IRepository<User> repository = repositoryFactory.CreateRepository<User>();
 ```
-##### Create an DTO
+##### Create a DTO
 The DTOs is the heart of this library. To avoid having a lot of complicated logic and unmanaged source code, we can now push all DTO-related logic inside the DTO. First, Let start with a very simple DTO.
 ```csharp
 class UserDto : DTORepository.Models.DtoBase<User, UserDto>
@@ -135,7 +135,7 @@ class UserDto : DTORepository.Models.DtoBase<User, UserDto>
     //...
 }
 ```
-***Or, you can just create separate DTOs for each actions.***
+Or, you can just create separate DTOs for each actions.
 ```csharp
 class UserCreateDto : DTORepository.Models.DtoBase<User, UserCreateDto>
 {
@@ -273,7 +273,7 @@ For the deletion, the DTO is not required. We can just pass an entity's identifi
 ISuccessOrErrors status = repository.Delete(1); // delete a User entity with Id of 1
 ```
 
-### Transaction
+## Transaction
 Normally, every repository operation will perform **dbContext.SaveChanges()** on itself. However, if there is a requirement to perform many operations as a transaction, we can use the library's ***UnitOfWork*** implementation to wrap operations together as a single transaction.
 ```csharp
 //...
@@ -289,7 +289,7 @@ Assert.True(status.IsValid); // indicate that transaction is completed
 //...
 ```
 
-### Dependency Injection with Autofac
+## Dependency Injection with Autofac
 In your AutoFac startup config in App_Start folder of your project, add these lines
 ```csharp
 var builder = new ContainerBuilder();
@@ -305,7 +305,7 @@ builder.RegisterGeneric(typeof(Repository<>)).As(typeof(IRepository<>));
 //...
 ```
 
-### Tech
+## Tech
 
 DTORepository relies on these 2 open source projects to work properly:
 
