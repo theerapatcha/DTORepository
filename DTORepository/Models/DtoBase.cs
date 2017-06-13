@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 namespace DTORepository.Models
 {
     public abstract class DtoBase : Mappable {
-        protected internal virtual ActionFlags AllowedActions { get { return ActionFlags.None; } }
+        protected internal virtual ActionFlags AllowedActions => ActionFlags.All;
     }
     
     public abstract class DtoBase<TEntity, TDto> : DtoBase
