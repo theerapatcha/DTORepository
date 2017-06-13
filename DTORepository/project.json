@@ -1,0 +1,25 @@
+﻿{
+  "dependencies": {
+    "AutoMapper": "6.0.2",
+    "EntityFramework": "6.1.3"
+  },
+  "frameworks": {
+    "net452": {}
+  },
+  "runtimes": {
+    "win": { }
+  },
+  "packOptions": {
+    "summary": "Enhance the seperation of concerns, most complicated logics can be implemented in DTO classes. This makes the code maintainable. This library also apply a concept of generic repository and unit of work to handle transactions between entities and contexts.",
+    "tags": ["DTO", "EF", "EntityFramework", "ORM", "Repository"],
+    "releaseNotes": "First initialize of DTORepository library",
+    "projectUrl": "https://github.com/theerapatcha/DTORepository",
+    "licenseUrl": "https://raw.githubusercontent.com/theerapatcha/DTORepository/master/LICENSE",
+    "requireLicenseAcceptance": false,
+    "repository": {
+      "type": "git",
+      "url": "https://github.com/theerapatcha/DTORepository"
+    },
+    "owners": ["Theerapat Chawannakul"]
+  }
+}
