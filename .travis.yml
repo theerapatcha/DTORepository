@@ -7,6 +7,7 @@ before_install:
 install:
   - mono .nuget/nuget.exe restore DTORepository.sln -Verbosity detailed
   - mono .nuget/nuget.exe install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
+  - ls /home/travis/.nuget/packages/
 script:
-  - xbuild /p:Configuration=Release DTORepository.sln
+  - msbuild /p:Configuration=Release DTORepository.sln
   - mono ./testrunner/xunit.runners.1.9.2/tools/xunit.console.clr4.exe ./DTORepositoryTest/bin/Release/DTORepositoryTest.dll
