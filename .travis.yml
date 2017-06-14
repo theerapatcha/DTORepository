@@ -6,7 +6,7 @@ before_install:
   - mono .nuget/nuget.exe # Output NuGet's version number
 install:
   - mono .nuget/nuget.exe restore DTORepository.sln -Verbosity detailed
-  - mono .nuget/nuget.exe install xunit.runners -Version 2.2.0 -OutputDirectory testrunner
+  - mono .nuget/nuget.exe install xunit.runner.console -Version 2.2.0 -OutputDirectory testrunner
   - ls /home/travis/.nuget/packages/automapper
 script:
   - MONO_IOMAP=case xbuild /p:Configuration=Release DTORepository.sln
