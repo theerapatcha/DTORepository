@@ -9,5 +9,5 @@ install:
   - mono .nuget/nuget.exe install xunit.runners -Version 1.9.2 -OutputDirectory testrunner
   - ls /home/travis/.nuget/packages/automapper
 script:
-  - msbuild /p:Configuration=Release DTORepository.sln
+  - MONO_IOMAP=case xbuild /p:Configuration=Release DTORepository.sln
   - mono ./testrunner/xunit.runners.1.9.2/tools/xunit.console.clr4.exe ./DTORepositoryTest/bin/Release/DTORepositoryTest.dll
