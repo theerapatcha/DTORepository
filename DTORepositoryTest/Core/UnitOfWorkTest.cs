@@ -30,7 +30,7 @@ namespace DTORepositoryTest.Core
             Assert.True(initialUpdate.IsValid);
             Assert.Equal("Update1", initialUpdate.Result.Name);
 
-            ISuccessOrErrors status = await unitOfWork.ExecuteAsync(async (context) =>
+            var status = await unitOfWork.ExecuteAsync(async (context) =>
             {
                 // Try Update
                 var innerStatus = await blogRepository.CreateOrUpdateAsync(new BlogUpdateDto
@@ -52,7 +52,7 @@ namespace DTORepositoryTest.Core
 
                 return innerStatus;
             });
-
+            
             // check rollback value
             Assert.False(status.IsValid);
             var blog = blogRepository.Get<BlogDto>(1).Result;
