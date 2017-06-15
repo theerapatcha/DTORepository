@@ -28,20 +28,33 @@ namespace DTORepositoryTest
         [Fact]
         public void Test_Flag_ThrowsOnError_True()
         {
-            DTORepositoryContainer.ThrowsOnDatabaseError = true;
-
-            Assert.Throws(typeof(InvalidProgramException), () =>
+            var oldFlag = DTORepositoryContainer.ThrowsOnDatabaseError;
+            try
             {
-                this.blogRepository.Create(new BlogDto());
-            });
+                Assert.Throws(typeof(InvalidProgramException), () =>
+                {
+                    DTORepositoryContainer.ThrowsOnDatabaseError = true;
+                    this.blogRepository.Create(new BlogDto());
+                });
+            }
+            finally
+            {
+                DTORepositoryContainer.ThrowsOnDatabaseError = oldFlag;
+            }
         }
         [Fact]
         public void Test_Flag_ThrowsOnError_False()
         {
-            DTORepositoryContainer.ThrowsOnDatabaseError = false;
-
-            var status = this.blogRepository.Create(new BlogDto());
-            Assert.Equal("Mock Exception", status.Errors[0].ErrorMessage);
+            var oldFlag = DTORepositoryContainer.ThrowsOnDatabaseError;
+            try
+            {
+                DTORepositoryContainer.ThrowsOnDatabaseError = false;
+                var status = this.blogRepository.Create(new BlogDto());
+                Assert.Equal("Mock Exception", status.Errors[0].ErrorMessage);
+            }finally
+            {
+                DTORepositoryContainer.ThrowsOnDatabaseError = oldFlag;
+            }
         }
     }
 }

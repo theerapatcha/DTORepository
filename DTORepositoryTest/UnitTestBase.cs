@@ -56,8 +56,6 @@ namespace DTORepositoryTest
         public UnitTestBase(ITestOutputHelper output)
         {
             this._context = PrepareContext();
-            DTORepositoryContainer.ThrowsOnDatabaseError = true;
-
         }
 
         #region IDisposable Support

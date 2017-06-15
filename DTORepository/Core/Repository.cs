@@ -67,12 +67,12 @@ namespace DTORepository.Core
                 return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
             }
         }
-        public Task<ISuccessOrErrors<TDto>> GetAsync<TDto>(params object[] identifiers)
+        public async Task<ISuccessOrErrors<TDto>> GetAsync<TDto>(params object[] identifiers)
              where TDto : DtoBase<TEntity, TDto>, new()
         {
             try
             { 
-                return this.detailService.GetAsync<TDto>(identifiers);
+                return await this.detailService.GetAsync<TDto>(identifiers);
             }
             catch (Exception e)
             {
@@ -82,7 +82,7 @@ namespace DTORepository.Core
                     throw;
                 }
                 var err = EntityFrameworkExceptionHandler.HandleException(e);
-                return Task.FromResult(SuccessOrErrors<TDto>.ConvertNonResultStatus(err));
+                return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
             }
         }
         public ISuccessOrErrors<IList<TDto>> Query<TDto>(Expression<Func<TEntity, bool>> predicate)
@@ -103,12 +103,12 @@ namespace DTORepository.Core
                 return SuccessOrErrors<IList<TDto>>.ConvertNonResultStatus(err);
             }
 }
-        public Task<ISuccessOrErrors<IList<TDto>>> QueryAsync<TDto>(Expression<Func<TEntity, bool>> predicate)
+        public async Task<ISuccessOrErrors<IList<TDto>>> QueryAsync<TDto>(Expression<Func<TEntity, bool>> predicate)
          where TDto : DtoBase<TEntity, TDto>, new()
         {
             try
             {
-                return listService.QueryAsync<TDto>(predicate);
+                return await listService.QueryAsync<TDto>(predicate);
             }
             catch(Exception e)
             {
@@ -118,7 +118,7 @@ namespace DTORepository.Core
                     throw;
                 }
                 var err = EntityFrameworkExceptionHandler.HandleException(e);
-                return Task.FromResult(SuccessOrErrors<IList<TDto>>.ConvertNonResultStatus(err));
+                return SuccessOrErrors<IList<TDto>>.ConvertNonResultStatus(err);
             }
 }
 
@@ -140,12 +140,12 @@ namespace DTORepository.Core
                 return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
             }
         }
-        public Task<ISuccessOrErrors<TDto>> CreateAsync<TDto>(TDto dto)
+        public async Task<ISuccessOrErrors<TDto>> CreateAsync<TDto>(TDto dto)
             where TDto : DtoBase<TEntity, TDto>, new()
         {
             try
             {
-                return this.createOrUpdateService.CreateOrUpdateAsync(dto, ActionFlags.Create);
+                return await this.createOrUpdateService.CreateOrUpdateAsync(dto, ActionFlags.Create);
             }
             catch (Exception e)
             {
@@ -155,7 +155,7 @@ namespace DTORepository.Core
                     throw;
                 }
                 var err = EntityFrameworkExceptionHandler.HandleException(e);
-                return Task.FromResult(SuccessOrErrors<TDto>.ConvertNonResultStatus(err));
+                return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
             }
         }
         public IQueryable<TDto> List<TDto>()
@@ -182,12 +182,12 @@ namespace DTORepository.Core
                 return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
             }
         }
-        public Task<ISuccessOrErrors<TDto>> UpdateAsync<TDto>(TDto dto)
+        public async Task<ISuccessOrErrors<TDto>> UpdateAsync<TDto>(TDto dto)
             where TDto : DtoBase<TEntity, TDto>, new()
         {
             try
             {
-                return this.createOrUpdateService.CreateOrUpdateAsync(dto, ActionFlags.Update);
+                return await this.createOrUpdateService.CreateOrUpdateAsync(dto, ActionFlags.Update);
             }
             catch (Exception e)
             {
@@ -197,7 +197,7 @@ namespace DTORepository.Core
                     throw;
                 }
                 var err = EntityFrameworkExceptionHandler.HandleException(e);
-                return Task.FromResult(SuccessOrErrors<TDto>.ConvertNonResultStatus(err));
+                return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
             }
 }
         public ISuccessOrErrors<TDto> CreateOrUpdate<TDto>(TDto dto)
@@ -218,12 +218,12 @@ namespace DTORepository.Core
                 return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
             }
         }
-        public Task<ISuccessOrErrors<TDto>> CreateOrUpdateAsync<TDto>(TDto dto)
+        public async Task<ISuccessOrErrors<TDto>> CreateOrUpdateAsync<TDto>(TDto dto)
             where TDto : DtoBase<TEntity, TDto>, new()
         {
             try
             {
-                return this.createOrUpdateService.CreateOrUpdateAsync(dto);
+                return await this.createOrUpdateService.CreateOrUpdateAsync(dto);
             }
             catch (Exception e)
             {
@@ -233,7 +233,7 @@ namespace DTORepository.Core
                     throw;
                 }
                 var err = EntityFrameworkExceptionHandler.HandleException(e);
-                return Task.FromResult(SuccessOrErrors<TDto>.ConvertNonResultStatus(err));
+                return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
             }
         }
         public ISuccessOrErrors Delete(params object[] identifiers)
@@ -253,11 +253,11 @@ namespace DTORepository.Core
                 return err;
             }
         }
-        public Task<ISuccessOrErrors> DeleteAsync(params object[] identifiers)
+        public async Task<ISuccessOrErrors> DeleteAsync(params object[] identifiers)
         {
             try
             {
-                return this.deleteService.DeleteAsync(identifiers);
+                return await this.deleteService.DeleteAsync(identifiers);
             }
             catch (Exception e)
             {
@@ -267,7 +267,7 @@ namespace DTORepository.Core
                     throw;
                 }
                 var err = EntityFrameworkExceptionHandler.HandleException(e);
-                return Task.FromResult(err);
+                return err;
             }
         }
     }
