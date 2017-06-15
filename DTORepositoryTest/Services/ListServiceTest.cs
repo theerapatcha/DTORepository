@@ -7,11 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DTORepositoryTest.Services
 {
     public class ListServiceTest : UnitTestBase
-    {   
+    {
+        public ListServiceTest(ITestOutputHelper output) : base(output) { }
         [Fact]
         public void TestList_Query_By_Predicate_Blog()
         {

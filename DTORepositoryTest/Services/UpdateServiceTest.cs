@@ -8,11 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DTORepositoryTest.Services
 {
     public class CreateOrUpdateServiceTest : UnitTestBase
-    {   
+    {
+        public CreateOrUpdateServiceTest(ITestOutputHelper output) : base(output) { }
         [Fact]
         public void TestUpdate_Blog_NameAndUrl_Only()
         {
@@ -158,6 +160,7 @@ namespace DTORepositoryTest.Services
 
                 }
             }, ActionFlags.Update);
+            Assert.Equal(new List<object>() { },result.Errors);
             Assert.True(result.IsValid);
             Assert.Equal(1, result.Result.BlogId);
             var entity = this._context.Blogs.Where(x => x.BlogId == 1).First();

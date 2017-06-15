@@ -12,7 +12,6 @@ namespace DTORepositoryTest.Samples.Models
     {
         public BloggingContext(DbConnection connection) : base(connection, true)
         {
-
         }
         public virtual DbSet<Blog> Blogs { get; set; }
         public virtual DbSet<Post> Posts { get; set; }

@@ -41,7 +41,7 @@ namespace DTORepository.Services
             }
             catch (Exception e)
             {
-                var throwOnError = false;
+                var throwOnError = DTORepositoryContainer.ThrowsOnError;
                 if (throwOnError)
                 {
                     throw;
@@ -63,7 +63,7 @@ namespace DTORepository.Services
             }
             catch (Exception e)
             {
-                var throwOnError = false;
+                var throwOnError = DTORepositoryContainer.ThrowsOnError;
                 if (throwOnError)
                 {
                     throw e;

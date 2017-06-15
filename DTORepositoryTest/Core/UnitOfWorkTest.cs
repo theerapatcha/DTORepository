@@ -3,6 +3,7 @@ using DTORepositoryTest.Samples.Dtos;
 using DTORepositoryTest.Samples.Models;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DTORepositoryTest.Core
 {
@@ -10,7 +11,7 @@ namespace DTORepositoryTest.Core
     {
         RepositoryFactory repositoryFactory;
         UnitOfWorkFactory unitOfWorkFactory;
-        public UnitOfWorkTest()
+        public UnitOfWorkTest(ITestOutputHelper output) : base(output) 
         {
             repositoryFactory = new RepositoryFactory(this._context);
             unitOfWorkFactory = new UnitOfWorkFactory(this._context);

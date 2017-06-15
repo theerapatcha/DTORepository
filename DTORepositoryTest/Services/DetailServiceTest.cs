@@ -3,11 +3,13 @@ using DTORepositoryTest.Samples.Dtos;
 using DTORepositoryTest.Samples.Models;
 using System.Linq;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DTORepositoryTest.Services
 {
     public class DetailServiceTest : UnitTestBase
-    {   
+    {
+        public DetailServiceTest(ITestOutputHelper output) : base(output) { }
         [Fact]
         public void TestDetail_Blog()
         {

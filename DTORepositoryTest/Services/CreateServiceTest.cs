@@ -8,11 +8,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DTORepositoryTest.Services
 {
     public class CreateServiceTest : UnitTestBase
-    {   
+    {
+        public CreateServiceTest(ITestOutputHelper output) : base(output) { }
         [Fact]
         public void TestCreate_Blog()
         {

@@ -1,0 +1,7 @@
+install:
+  - nuget restore DTORepository.sln -Verbosity detailed
+  - nuget install xunit.runner.console -Version 2.2.0 -OutputDirectory testrunner
+build:
+  - msbuild /p:Configuration=Release DTORepository.sln
+test:
+  - ./testrunner/xunit.runner.console.2.2.0/tools/xunit.console.exe ./DTORepositoryTest/bin/Release/DTORepositoryTest.dll

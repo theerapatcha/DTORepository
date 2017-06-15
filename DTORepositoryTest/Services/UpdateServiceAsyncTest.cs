@@ -7,11 +7,13 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Xunit;
+using Xunit.Abstractions;
 
 namespace DTORepositoryTest.Services
 {
     public class CreateOrUpdateServiceAsyncTest : UnitTestBase
-    {   
+    {
+        public CreateOrUpdateServiceAsyncTest(ITestOutputHelper output) : base(output) { }
         [Fact]
         public async Task TestUpdate_Blog()
         {
