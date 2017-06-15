@@ -8,4 +8,9 @@ build:
   project: DTORepository.sln
 
 test_script:
-  - testrunner/xunit.runner.console.2.2.0/tools/xunit.console.exe ./DTORepositoryTest/bin/Release/DTORepositoryTest.dll
+  - start testrunner/xunit.runner.console.2.2.0/tools/xunit.console.exe ./DTORepositoryTest/bin/Release/DTORepositoryTest.dll /xml ./TestResults/xunit-results.xml
+
+after_test:
+  # upload results to AppVeyor
+  - $wc = New-Object 'System.Net.WebClient'
+  - $wc.UploadFile("https://ci.appveyor.com/api/testresults/xunit/$($env:APPVEYOR_JOB_ID)", (Resolve-Path ./TestResults/xunit-results.xml))
