@@ -32,45 +32,23 @@ namespace DTORepository.Services
         public ISuccessOrErrors Delete(params object[] identifiers)
         {
             var status = SuccessOrErrors.Success("Delete success");
-            try
-            {
-                var dbSet = this.dbContext.Set<TEntity>();
-                var entity = dbSet.Find(identifiers);
-                dbSet.Remove(entity);
-                dbContext.SaveChanges();
-            }
-            catch (Exception e)
-            {
-                var throwOnError = DTORepositoryContainer.ThrowsOnError;
-                if (throwOnError)
-                {
-                    throw;
-                }
-                var err = EntityFrameworkExceptionHandler.HandleException(e);
-                status.AddSingleError("Cannot delete", err);
-            }
+           
+            var dbSet = this.dbContext.Set<TEntity>();
+            var entity = dbSet.Find(identifiers);
+            dbSet.Remove(entity);
+            dbContext.SaveChanges();
+          
             return status;
         }
         public async Task<ISuccessOrErrors> DeleteAsync(params object[] identifiers)
         {
             var status = SuccessOrErrors.Success("Delete success");
-            try
-            {
-                var dbSet = this.dbContext.Set<TEntity>();
-                var entity = await dbSet.FindAsync(identifiers);
-                dbSet.Remove(entity);
-                await dbContext.SaveChangesAsync();
-            }
-            catch (Exception e)
-            {
-                var throwOnError = DTORepositoryContainer.ThrowsOnError;
-                if (throwOnError)
-                {
-                    throw e;
-                }
-                var err = EntityFrameworkExceptionHandler.HandleException(e);
-                status.AddSingleError("Cannot delete", err);
-            }
+
+            var dbSet = this.dbContext.Set<TEntity>();
+            var entity = await dbSet.FindAsync(identifiers);
+            dbSet.Remove(entity);
+            await dbContext.SaveChangesAsync();
+
             return status;
         }
     }

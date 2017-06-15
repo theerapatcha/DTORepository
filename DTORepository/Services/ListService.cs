@@ -46,26 +46,15 @@ namespace DTORepository.Services
         public ISuccessOrErrors<IList<TDto>> Query<TDto>(Expression<Func<TEntity, bool>> predicate)
             where TDto : DtoBase<TEntity, TDto>, new()
         {
-            try
-            {
-                var status = new SuccessOrErrors<IList<TDto>>();
-                //var dtos = dbContext.Set<TEntity>().Where(predicate).ProjectTo<TDto>(DtoHelper.Mapper.ConfigurationProvider).ToList();
-                if (!new TDto().AllowedActions.HasFlag(ActionFlags.List))
-                    return status.AddSingleError("Dto is not allowed for this kind of action");
-                var entities = dbContext.Set<TEntity>().Where(predicate);
-                var dtos = DTORepositoryContainer.Mapper.Map<IList<TDto>>(entities, opts => opts.Items["ActionFlags"] = ActionFlags.List);
-                return status.SetSuccessWithResult(dtos, "Success");
-            }
-            catch (Exception e)
-            {
-                var throwOnError = DTORepositoryContainer.ThrowsOnError;
-                if (throwOnError)
-                {
-                    throw;
-                }
-                var err = EntityFrameworkExceptionHandler.HandleException(e);
-                return SuccessOrErrors<IList<TDto>>.ConvertNonResultStatus(err);
-            }
+
+            var status = new SuccessOrErrors<IList<TDto>>();
+            //var dtos = dbContext.Set<TEntity>().Where(predicate).ProjectTo<TDto>(DtoHelper.Mapper.ConfigurationProvider).ToList();
+            if (!new TDto().AllowedActions.HasFlag(ActionFlags.List))
+                return status.AddSingleError("Dto is not allowed for this kind of action");
+            var entities = dbContext.Set<TEntity>().Where(predicate);
+            var dtos = DTORepositoryContainer.Mapper.Map<IList<TDto>>(entities, opts => opts.Items["ActionFlags"] = ActionFlags.List);
+            return status.SetSuccessWithResult(dtos, "Success");
+        
         }
         public Task<ISuccessOrErrors<IList<TDto>>> QueryAsync<TDto>(Expression<Func<TEntity, bool>> predicate)
            where TDto : DtoBase<TEntity, TDto>, new()

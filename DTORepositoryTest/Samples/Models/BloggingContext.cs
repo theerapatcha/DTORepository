@@ -10,6 +10,9 @@ namespace DTORepositoryTest.Samples.Models
 {
     public class BloggingContext : DbContext
     {
+        public BloggingContext()
+        {
+        }
         public BloggingContext(DbConnection connection) : base(connection, true)
         {
         }

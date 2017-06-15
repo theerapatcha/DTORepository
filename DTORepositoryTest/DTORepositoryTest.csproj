@@ -49,6 +49,7 @@
     <Reference Include="System.Transactions" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="DTORepositoryContainterTest.cs" />
     <Compile Include="Samples\Dtos\AuthorDto.cs" />
     <Compile Include="Samples\Dtos\BlogUpdateDto.cs" />
     <Compile Include="Samples\Dtos\BlogTagDto.cs" />

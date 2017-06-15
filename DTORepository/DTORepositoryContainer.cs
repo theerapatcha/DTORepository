@@ -14,7 +14,7 @@ namespace DTORepository
 {
     public static class DTORepositoryContainer
     {
-        public static bool ThrowsOnError = false;
+        public static bool ThrowsOnDatabaseError = false;
         private static IMapper _Mapper;
         public static IMapper Mapper {
             get{

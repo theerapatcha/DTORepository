@@ -33,73 +33,51 @@ namespace DTORepository.Services
         public ISuccessOrErrors<TDto> CreateOrUpdate<TDto>(TDto dto, ActionFlags actions) 
             where TDto : DtoBase<TEntity, TDto>, new()
         {
-            try
+            
+            var status = SuccessOrErrors<TDto>.SuccessWithResult(null, "Success");
+            status = validateDtoState(status, dto, actions);
+            if (status.IsValid)
             {
-                var status = SuccessOrErrors<TDto>.SuccessWithResult(null, "Success");
-                status = validateDtoState(status, dto, actions);
+                var entity = DTORepositoryContainer.Mapper.Map<TEntity>(dto, opts =>
+                {
+                    opts.Items["DbContext"] = dbContext;
+                    opts.Items["CurrentStatus"] = status;
+                    opts.Items["ActionFlags"] = actions;
+                });
                 if (status.IsValid)
                 {
-                    var entity = DTORepositoryContainer.Mapper.Map<TEntity>(dto, opts =>
-                    {
-                        opts.Items["DbContext"] = dbContext;
-                        opts.Items["CurrentStatus"] = status;
-                        opts.Items["ActionFlags"] = actions;
-                    });
-                    if (status.IsValid)
-                    {
-                        dbContext.SaveChanges();
-                        DTORepositoryContainer.Mapper.Map<TEntity, TDto>(entity, dto);
-                        return status.SetSuccessWithResult(dto, "Success");
-                    }
+                    dbContext.SaveChanges();
+                    DTORepositoryContainer.Mapper.Map<TEntity, TDto>(entity, dto);
+                    return status.SetSuccessWithResult(dto, "Success");
                 }
-                return status;
-            } catch(Exception e)
-            {
-                var throwOnError = DTORepositoryContainer.ThrowsOnError;
-                if (throwOnError)
-                {
-                    throw;
-                }
-                var err = EntityFrameworkExceptionHandler.HandleException(e);
-                return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
             }
+            return status;
         }
 
         public async Task<ISuccessOrErrors<TDto>> CreateOrUpdateAsync<TDto>(TDto dto, ActionFlags actions)
             where TDto : DtoBase<TEntity, TDto>, new()
         {
-            try
+            
+            var status = SuccessOrErrors<TDto>.SuccessWithResult(null, "Success");
+            status = validateDtoState(status, dto, actions);
+            if (status.IsValid)
             {
-                var status = SuccessOrErrors<TDto>.SuccessWithResult(null, "Success");
-                status = validateDtoState(status, dto, actions);
+                var entity = DTORepositoryContainer.Mapper.Map<TEntity>(dto, opts =>
+                {
+                    opts.Items["DbContext"] = dbContext;
+                    opts.Items["CurrentStatus"] = status;
+                    opts.Items["ActionFlags"] = actions;
+
+                });
                 if (status.IsValid)
                 {
-                    var entity = DTORepositoryContainer.Mapper.Map<TEntity>(dto, opts =>
-                    {
-                        opts.Items["DbContext"] = dbContext;
-                        opts.Items["CurrentStatus"] = status;
-                        opts.Items["ActionFlags"] = actions;
-
-                    });
-                    if (status.IsValid)
-                    {
-                        await dbContext.SaveChangesAsync();
-                        DTORepositoryContainer.Mapper.Map<TEntity, TDto>(entity, dto);
-                        return status.SetSuccessWithResult(dto, "Success");
-                    }
+                    await dbContext.SaveChangesAsync();
+                    DTORepositoryContainer.Mapper.Map<TEntity, TDto>(entity, dto);
+                    return status.SetSuccessWithResult(dto, "Success");
                 }
-                return status;
             }
-            catch (Exception e)
-            {
-                var throwOnError = DTORepositoryContainer.ThrowsOnError;
-                if (throwOnError)
-                {
-                    throw e;
-                }
-                var err = EntityFrameworkExceptionHandler.HandleException(e);
-                return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
-            }
+            return status;
+            
         }
         private ISuccessOrErrors<TDto> validateDtoState<TDto>(ISuccessOrErrors<TDto> status, TDto dto, ActionFlags flags)
             where TDto : DtoBase<TEntity, TDto>, new()

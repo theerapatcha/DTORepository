@@ -17,11 +17,12 @@ namespace DTORepositoryTest
     {
         protected readonly ITestOutputHelper output;
         protected BloggingContext _context;
+        protected DbConnection _connection;
         public BloggingContext PrepareContext()
         {           
-            DbConnection connection =
+            _connection =
             Effort.DbConnectionFactory.CreateTransient();
-            BloggingContext context = new BloggingContext(connection);
+            BloggingContext context = new BloggingContext(_connection);
             using (var trx = context.Database.BeginTransaction())
             {
                 context.Blogs.Add(new Blog
@@ -55,7 +56,7 @@ namespace DTORepositoryTest
         public UnitTestBase(ITestOutputHelper output)
         {
             this._context = PrepareContext();
-            DTORepositoryContainer.ThrowsOnError = true;
+            DTORepositoryContainer.ThrowsOnDatabaseError = true;
 
         }
 

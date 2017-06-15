@@ -1,5 +1,6 @@
 # DTORepository
 [![NuGet version](https://badge.fury.io/nu/DTORepository.svg)](https://badge.fury.io/nu/DTORepository) [![Build Status](https://ci.appveyor.com/api/projects/status/github/theerapatcha/dtorepository?branch=master&svg=true)](https://ci.appveyor.com/project/theerapatcha/dtorepository)
+
 DTORepository is a library use to facilitate mapping a DTO to/from an Entity in EntityFramework with generic repository pattern. By enabling a developer to put most of business DTO-related logic inside an DTO class, this library enhances the source code's maintainability and readability.
 ### Installation
 

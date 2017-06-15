@@ -52,33 +52,111 @@ namespace DTORepository.Core
         public ISuccessOrErrors<TDto> Get<TDto>(params object[] identifiers)
              where TDto : DtoBase<TEntity, TDto>, new()
         {
-            return this.detailService.Get<TDto>(identifiers);
+            try
+            {
+                return this.detailService.Get<TDto>(identifiers);
+            }
+            catch (Exception e)
+            {
+                var throwOnError = DTORepositoryContainer.ThrowsOnDatabaseError;
+                if (throwOnError)
+                {
+                    throw;
+                }
+                var err = EntityFrameworkExceptionHandler.HandleException(e);
+                return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
+            }
         }
         public Task<ISuccessOrErrors<TDto>> GetAsync<TDto>(params object[] identifiers)
              where TDto : DtoBase<TEntity, TDto>, new()
         {
-            return this.detailService.GetAsync<TDto>(identifiers);
+            try
+            { 
+                return this.detailService.GetAsync<TDto>(identifiers);
+            }
+            catch (Exception e)
+            {
+                var throwOnError = DTORepositoryContainer.ThrowsOnDatabaseError;
+                if (throwOnError)
+                {
+                    throw;
+                }
+                var err = EntityFrameworkExceptionHandler.HandleException(e);
+                return Task.FromResult(SuccessOrErrors<TDto>.ConvertNonResultStatus(err));
+            }
         }
         public ISuccessOrErrors<IList<TDto>> Query<TDto>(Expression<Func<TEntity, bool>> predicate)
           where TDto : DtoBase<TEntity, TDto>, new()
         {
-            return listService.Query<TDto>(predicate);
-        }
+            try
+            {
+                return listService.Query<TDto>(predicate);
+            }
+             catch(Exception e)
+            {
+                var throwOnError = DTORepositoryContainer.ThrowsOnDatabaseError;
+                if (throwOnError)
+                {
+                    throw;
+                }
+                var err = EntityFrameworkExceptionHandler.HandleException(e);
+                return SuccessOrErrors<IList<TDto>>.ConvertNonResultStatus(err);
+            }
+}
         public Task<ISuccessOrErrors<IList<TDto>>> QueryAsync<TDto>(Expression<Func<TEntity, bool>> predicate)
          where TDto : DtoBase<TEntity, TDto>, new()
         {
-            return listService.QueryAsync<TDto>(predicate);
-        }
+            try
+            {
+                return listService.QueryAsync<TDto>(predicate);
+            }
+            catch(Exception e)
+            {
+                var throwOnError = DTORepositoryContainer.ThrowsOnDatabaseError;
+                if (throwOnError)
+                {
+                    throw;
+                }
+                var err = EntityFrameworkExceptionHandler.HandleException(e);
+                return Task.FromResult(SuccessOrErrors<IList<TDto>>.ConvertNonResultStatus(err));
+            }
+}
 
         public ISuccessOrErrors<TDto> Create<TDto>(TDto dto)
             where TDto: DtoBase<TEntity, TDto>, new()
         {
-            return this.createOrUpdateService.CreateOrUpdate(dto, ActionFlags.Create);
+            try
+            {
+                return this.createOrUpdateService.CreateOrUpdate(dto, ActionFlags.Create);
+            }
+            catch (Exception e)
+            {
+                var throwOnError = DTORepositoryContainer.ThrowsOnDatabaseError;
+                if (throwOnError)
+                {
+                    throw;
+                }
+                var err = EntityFrameworkExceptionHandler.HandleException(e);
+                return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
+            }
         }
         public Task<ISuccessOrErrors<TDto>> CreateAsync<TDto>(TDto dto)
             where TDto : DtoBase<TEntity, TDto>, new()
         {
-            return this.createOrUpdateService.CreateOrUpdateAsync(dto, ActionFlags.Create);
+            try
+            {
+                return this.createOrUpdateService.CreateOrUpdateAsync(dto, ActionFlags.Create);
+            }
+            catch (Exception e)
+            {
+                var throwOnError = DTORepositoryContainer.ThrowsOnDatabaseError;
+                if (throwOnError)
+                {
+                    throw;
+                }
+                var err = EntityFrameworkExceptionHandler.HandleException(e);
+                return Task.FromResult(SuccessOrErrors<TDto>.ConvertNonResultStatus(err));
+            }
         }
         public IQueryable<TDto> List<TDto>()
             where TDto : DtoBase<TEntity, TDto>, new()
@@ -89,30 +167,108 @@ namespace DTORepository.Core
         public ISuccessOrErrors<TDto> Update<TDto>(TDto dto)
             where TDto : DtoBase<TEntity, TDto>, new()
         {
-            return this.createOrUpdateService.CreateOrUpdate(dto, ActionFlags.Update);
+            try
+            {
+                return this.createOrUpdateService.CreateOrUpdate(dto, ActionFlags.Update);
+            }
+            catch (Exception e)
+            {
+                var throwOnError = DTORepositoryContainer.ThrowsOnDatabaseError;
+                if (throwOnError)
+                {
+                    throw;
+                }
+                var err = EntityFrameworkExceptionHandler.HandleException(e);
+                return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
+            }
         }
         public Task<ISuccessOrErrors<TDto>> UpdateAsync<TDto>(TDto dto)
             where TDto : DtoBase<TEntity, TDto>, new()
         {
-            return this.createOrUpdateService.CreateOrUpdateAsync(dto, ActionFlags.Update);
-        }
+            try
+            {
+                return this.createOrUpdateService.CreateOrUpdateAsync(dto, ActionFlags.Update);
+            }
+            catch (Exception e)
+            {
+                var throwOnError = DTORepositoryContainer.ThrowsOnDatabaseError;
+                if (throwOnError)
+                {
+                    throw;
+                }
+                var err = EntityFrameworkExceptionHandler.HandleException(e);
+                return Task.FromResult(SuccessOrErrors<TDto>.ConvertNonResultStatus(err));
+            }
+}
         public ISuccessOrErrors<TDto> CreateOrUpdate<TDto>(TDto dto)
            where TDto : DtoBase<TEntity, TDto>, new()
         {
-            return this.createOrUpdateService.CreateOrUpdate(dto);
+            try
+            {
+                return this.createOrUpdateService.CreateOrUpdate(dto);
+            }
+            catch (Exception e)
+            {
+                var throwOnError = DTORepositoryContainer.ThrowsOnDatabaseError;
+                if (throwOnError)
+                {
+                    throw;
+                }
+                var err = EntityFrameworkExceptionHandler.HandleException(e);
+                return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
+            }
         }
         public Task<ISuccessOrErrors<TDto>> CreateOrUpdateAsync<TDto>(TDto dto)
             where TDto : DtoBase<TEntity, TDto>, new()
         {
-            return this.createOrUpdateService.CreateOrUpdateAsync(dto);
+            try
+            {
+                return this.createOrUpdateService.CreateOrUpdateAsync(dto);
+            }
+            catch (Exception e)
+            {
+                var throwOnError = DTORepositoryContainer.ThrowsOnDatabaseError;
+                if (throwOnError)
+                {
+                    throw;
+                }
+                var err = EntityFrameworkExceptionHandler.HandleException(e);
+                return Task.FromResult(SuccessOrErrors<TDto>.ConvertNonResultStatus(err));
+            }
         }
         public ISuccessOrErrors Delete(params object[] identifiers)
         {
-            return this.deleteService.Delete(identifiers);
+            try
+            {
+                return this.deleteService.Delete(identifiers);
+            }
+            catch (Exception e)
+            {
+                var throwOnError = DTORepositoryContainer.ThrowsOnDatabaseError;
+                if (throwOnError)
+                {
+                    throw;
+                }
+                var err = EntityFrameworkExceptionHandler.HandleException(e);
+                return err;
+            }
         }
         public Task<ISuccessOrErrors> DeleteAsync(params object[] identifiers)
         {
-            return this.deleteService.DeleteAsync(identifiers);
+            try
+            {
+                return this.deleteService.DeleteAsync(identifiers);
+            }
+            catch (Exception e)
+            {
+                var throwOnError = DTORepositoryContainer.ThrowsOnDatabaseError;
+                if (throwOnError)
+                {
+                    throw;
+                }
+                var err = EntityFrameworkExceptionHandler.HandleException(e);
+                return Task.FromResult(err);
+            }
         }
     }
 }
