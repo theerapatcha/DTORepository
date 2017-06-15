@@ -6,7 +6,6 @@ configuration: Release
 
 build:
   project: DTORepository.sln
-  verbosity: detailed
 
 test_script:
-  - ./testrunner/xunit.runner.console.2.2.0/tools/xunit.console.exe ./DTORepositoryTest/bin/Release/DTORepositoryTest.dll
+  - testrunner/xunit.runner.console.2.2.0/tools/xunit.console.exe ./DTORepositoryTest/bin/Release/DTORepositoryTest.dll
