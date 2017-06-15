@@ -56,12 +56,6 @@ namespace DTORepositoryTest
         {
             this._context = PrepareContext();
             DTORepositoryContainer.ThrowsOnError = true;
-            output.WriteLine(
-                String.Join(",",
-                DTORepositoryContainer.Mapper.ConfigurationProvider.GetAllTypeMaps().Select(x=> x.SourceType.Name + " -> " + x.DestinationType.Name).ToArray())
-            );
-            output.WriteLine($"Blogs #: {_context.Blogs.Local.Count()} Posts# {_context.Posts.Local.Count()}");
-            output.WriteLine($"Blogs #: {_context.Blogs.Count()} Posts# {_context.Posts.Count()}");
 
         }
 

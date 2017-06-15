@@ -8,7 +8,7 @@ build:
   project: DTORepository.sln
 
 test_script:
-  - start testrunner/xunit.runner.console.2.2.0/tools/xunit.console.exe ./DTORepositoryTest/bin/Release/DTORepositoryTest.dll /xml ./TestResults/xunit-results.xml
+  - start testrunner/xunit.runner.console.2.2.0/tools/xunit.console.exe ./DTORepositoryTest/bin/Release/DTORepositoryTest.dll -nunit ./TestResults/xunit-results.xml
 
 after_test:
   # upload results to AppVeyor

@@ -12,9 +12,9 @@ using Xunit.Abstractions;
 
 namespace DTORepositoryTest.Services
 {
-    public class CreateOrUpdateServiceTest : UnitTestBase
+    public class UpdateServiceTest : UnitTestBase
     {
-        public CreateOrUpdateServiceTest(ITestOutputHelper output) : base(output) { }
+        public UpdateServiceTest(ITestOutputHelper output) : base(output) { }
         [Fact]
         public void TestUpdate_Blog_NameAndUrl_Only()
         {

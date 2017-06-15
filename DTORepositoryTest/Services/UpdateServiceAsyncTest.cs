@@ -1,4 +1,5 @@
-﻿using DTORepository.Services;
+﻿using DTORepository.Common;
+using DTORepository.Services;
 using DTORepositoryTest.Samples.Dtos;
 using DTORepositoryTest.Samples.Models;
 using System;
@@ -11,9 +12,9 @@ using Xunit.Abstractions;
 
 namespace DTORepositoryTest.Services
 {
-    public class CreateOrUpdateServiceAsyncTest : UnitTestBase
+    public class UpdateServiceAsyncTest : UnitTestBase
     {
-        public CreateOrUpdateServiceAsyncTest(ITestOutputHelper output) : base(output) { }
+        public UpdateServiceAsyncTest(ITestOutputHelper output) : base(output) { }
         [Fact]
         public async Task TestUpdate_Blog()
         {
@@ -24,7 +25,7 @@ namespace DTORepositoryTest.Services
                 BlogId = 1,
                 Name = "Test Update",
                 Url = "https://www.usc.edu"
-            });
+            }, ActionFlags.Update);
             Assert.True(result.IsValid);
             Assert.Equal(1, result.Result.BlogId);
             
@@ -48,7 +49,7 @@ namespace DTORepositoryTest.Services
                     new PostDto { PostId = 2, Title = "TestTitle2", Content = "TestContent2" },
                     new PostDto { Title = "TestTitle3", Content = "TestContent3" },
                 }
-            });
+            }, ActionFlags.Update);
             Assert.True(result.IsValid);
             Assert.Equal(1, result.Result.BlogId);
             var entity = this._context.Blogs.Where(x => x.BlogId == 1).First();
@@ -76,7 +77,7 @@ namespace DTORepositoryTest.Services
                     new PostDto { Title = "TestTitle2", Content = "TestContent2" },
                     new PostDto { Title = "TestTitle3", Content = "TestContent3" },
                 }
-            });
+            }, ActionFlags.Update);
             Assert.True(result.IsValid);
             Assert.Equal(1, result.Result.BlogId);
             var entity = this._context.Blogs.Where(x => x.BlogId == 1).First();
@@ -95,7 +96,7 @@ namespace DTORepositoryTest.Services
                 Name = "Test Update2",
                 Url = "https://www.usc.edu",
                 PostIds = new List<int>() { 3, 4 }
-            });
+            }, ActionFlags.Update);
             Assert.True(result.IsValid);
             Assert.Equal(1, result.Result.BlogId);
             var entity = this._context.Blogs.Where(x => x.BlogId == 1).First();
