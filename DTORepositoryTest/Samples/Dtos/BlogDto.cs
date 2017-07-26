@@ -25,6 +25,7 @@ namespace DTORepositoryTest.Samples.Dtos
 
         [IgnoreRetrievingFor(ActionFlags.List)]
         public virtual List<PostDto> Posts { get; set; }
+        public virtual List<int> PostIds { get; set; }
         public virtual List<BlogTagDto> Tags { get; set; }
         public int NumberOfPosts { get; set; }
 
@@ -33,8 +34,11 @@ namespace DTORepositoryTest.Samples.Dtos
         {
             get
             {
-                return m => m.ForMember(d => d.NumberOfPosts,
-                    opt => opt.MapFrom(s => s.Posts.Count()));
+                return m => m
+                    .ForMember(d => d.NumberOfPosts,
+                        opt => opt.MapFrom(s => s.Posts.Count()))
+                    .ForMember(d => d.PostIds,
+                        opt => opt.MapFrom(s => s.Posts.Select(x => x.PostId).ToList()));
             }
             
         }

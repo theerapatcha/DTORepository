@@ -23,53 +23,6 @@ namespace DTORepository.Internal
             }
             return defaultValue;
         }
-        public static IMappingExpression<TDto, TEntity> ConstructUsingExistingObject<TDto, TEntity>(this IMappingExpression<TDto, TEntity> expression)
-            where TEntity : class, new()
-            where TDto : DtoBase<TEntity, TDto>, new()
-        {
-            expression.ConstructUsing((src, opts) =>
-            {
-                var dbContext = (DbContext)opts.Options.Items["DbContext"];
-                var srcEntity = src.FindItemTrackedForUpdate(dbContext);
-                if (srcEntity == null)
-                {
-                    return dbContext.Set<TEntity>().Create();
-                }
-                return srcEntity;
-            });
-            return expression;
-        }
-        public static IMappingExpression<TDto, TEntity> AfterMapSetEntityState<TDto, TEntity>(this IMappingExpression<TDto, TEntity> expression)
-            where TEntity: class, new()
-            where TDto: DtoBase<TEntity, TDto>, new()
-        {
-            expression.AfterMap((src, dest, opts) =>
-             {
-                 var status = (ISuccessOrErrors)opts.Options.Items["CurrentStatus"];
-                 var dbContext = (DbContext)opts.Options.Items["DbContext"];
-                 var srcEntity = src.FindItemUntracked(dbContext);
-                 if (srcEntity == null)
-                 {
-                     status.Combine(src.CreateDataFromDto(dbContext, dest));
-                     src.SetupRestOfEntity(dbContext, dest);
-                 }
-                 else
-                 {
-                     status.Combine(src.UpdateDataFromDto(dbContext, dest, srcEntity));
-                     src.SetupRestOfEntity(dbContext, dest);
-                 }
-
-             });
-            return expression;
-        }
-
-        public static IMappingExpression<TSource, TDest> IgnoreMappingOnNullValue<TSource, TDest>(this IMappingExpression<TSource,TDest> expression)
-        {
-            expression.ForAllMembers(opt => opt.Condition((source, destination, sourceMember, destMember, cond) =>
-                    sourceMember != null
-                ));
-            return expression;
-        }
         public static IEnumerable<Type> GetAllMappableTypes(this AppDomain appDomain)
         {
             var allDtoTypes = appDomain.GetAssemblies().SelectMany(x =>
@@ -86,6 +39,50 @@ namespace DTORepository.Internal
             t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(Mappable)));
             return allDtoTypes;
         }
+        public static IMappingExpression<TDto, TEntity> ConstructUsingExistingObject<TDto, TEntity>(this IMappingExpression<TDto, TEntity> expression)
+            where TEntity : class, new()
+            where TDto : DtoBase<TEntity, TDto>, new()
+        {
+            expression.ConstructUsing((src, opts) =>
+            {
+                var dbContext = (DbContext)opts.Options.Items["DbContext"];
+                var srcEntity = src.FindItemTrackedForUpdate(dbContext);
+                if (srcEntity == null) return dbContext.Set<TEntity>().Create();
+                return srcEntity;
+            });
+            return expression;
+        }
+        public static IMappingExpression<TDto, TEntity> AfterMapSetEntityState<TDto, TEntity>(this IMappingExpression<TDto, TEntity> expression)
+            where TEntity: class, new()
+            where TDto: DtoBase<TEntity, TDto>, new()
+        {
+            expression.AfterMap((src, dest, opts) =>
+             {
+                 var status = (ISuccessOrErrors)opts.Options.Items["CurrentStatus"];
+                 var dbContext = (DbContext)opts.Options.Items["DbContext"];
+                 var srcEntity = src.FindItemUntracked(dbContext);
+                 if (srcEntity == null)
+                 {
+                     status.Combine(src.CreateDataFromDto(dbContext, dest));
+                     src.SetupRestOfEntity(dbContext, new TEntity());
+                 }
+                 else
+                 {
+                     status.Combine(src.UpdateDataFromDto(dbContext, dest, srcEntity));
+                     src.SetupRestOfEntity(dbContext, dest);
+                 }
+             });
+            return expression;
+        }
+
+        public static IMappingExpression<TSource, TDest> IgnoreMappingOnNullValue<TSource, TDest>(this IMappingExpression<TSource,TDest> expression)
+        {
+            expression.ForAllMembers(opt => opt.Condition((source, destination, sourceMember, destMember, cond) =>
+                    sourceMember != null
+                ));
+            return expression;
+        }
+       
 
         public static IMapperConfigurationExpression IgnoreMappingOnNullOrIgnoredValue(this IMapperConfigurationExpression expression)
         {
@@ -180,5 +177,12 @@ namespace DTORepository.Internal
                 );
             return expression;
         }
+        //public static IMappingExpression<TSource, TDest> AllowMappingCollection<TSource, TDest>(this IMappingExpression<TSource, TDest> expression)
+        //{
+        //   expression.ForAllMembers(opt => opt.Condition((source, destination, sourceMember, destMember, cond) =>
+        //            sourceMember != null
+        //        ));
+        //    return expression;
+        //}
     }
 }

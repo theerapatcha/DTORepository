@@ -41,7 +41,10 @@ namespace DTORepository.Internal
         {
             return (type.GetInterface("IEnumerable") != null);
         }
-       
+        public static bool IsCollectionType(this Type type)
+        {
+            return (type.GetInterface("ICollection") != null);
+        }
        
     }
 }

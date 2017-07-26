@@ -103,6 +103,30 @@ namespace DTORepositoryTest.Services
             Assert.Equal("Test Update2", result.Result.Name);
             Assert.Equal(2, entity.Posts.Count());
         }
+        [Fact]
+        public async Task UpdateBlogWithPosts_RemoveAllTags()
+        {
+            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            var result = await CreateOrUpdateService.CreateOrUpdateAsync(new BlogWithPostsCreateDto
+            {
+                BlogId = 1,
+                Name = "Test Update2",
+                Url = "https://www.usc.edu",
+                Tags = new List<BlogTagDto>()
+                {
+                    new BlogTagDto {
+                        Name = "Test",
+                        BlogId = 1
+                    }
+                }
+            }, ActionFlags.Update);
+            Assert.Equal(new List<object>() { }, result.Errors);
+            Assert.True(result.IsValid);
+            Assert.Equal(1, result.Result.BlogId);
+            var entity = this._context.Blogs.Where(x => x.BlogId == 1).First();
+            Assert.Equal("Test Update2", result.Result.Name);
+            Assert.Equal(1, entity.Tags.Count());
+        }
     }
     
 }

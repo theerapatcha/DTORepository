@@ -20,6 +20,8 @@ namespace DTORepositoryTest.Services
             Assert.Equal("http://google.com", result.Result.Url);
             Assert.Equal(2, result.Result.Posts.Count());
             Assert.Equal(2, result.Result.NumberOfPosts);
+            Assert.Equal(3, result.Result.PostIds[0]);
+            Assert.Equal(4, result.Result.PostIds[1]);
         }
         [Fact]
         public void TestDetail_Blog_Check_CanCall_Reference()

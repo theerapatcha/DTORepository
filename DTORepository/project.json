@@ -1,18 +1,26 @@
 ﻿{
   "dependencies": {
     "AutoMapper": "6.0.2",
+    "AutoMapper.Collection": "3.1.1",
+    "AutoMapper.Collection.EntityFramework": "3.1.1",
     "EntityFramework": "6.1.3"
   },
   "frameworks": {
     "net452": {}
   },
   "runtimes": {
-    "win": { }
+    "win": {}
   },
   "packOptions": {
     "summary": "Enhance the seperation of concerns, most complicated logics can be implemented in DTO classes. This makes the code maintainable. This library also apply a concept of generic repository and unit of work to handle transactions between entities and contexts.",
-    "tags": ["DTO", "EF", "EntityFramework", "ORM", "Repository"],
-    "releaseNotes": "Added variable ThrowsOnDatabaseError for detecting any failed operation via exceptions",
+    "tags": [
+      "DTO",
+      "EF",
+      "EntityFramework",
+      "ORM",
+      "Repository"
+    ],
+    "releaseNotes": "Fixed issues where nested entity collection cannot be updated by using AutoMapper.Collection",
     "projectUrl": "https://github.com/theerapatcha/DTORepository",
     "licenseUrl": "https://raw.githubusercontent.com/theerapatcha/DTORepository/master/LICENSE",
     "requireLicenseAcceptance": false,
@@ -20,6 +28,8 @@
       "type": "git",
       "url": "https://github.com/theerapatcha/DTORepository"
     },
-    "owners": ["Theerapat Chawannakul"]
+    "owners": [
+      "Theerapat Chawannakul"
+    ]
   }
 }

@@ -18,6 +18,7 @@ namespace DTORepositoryTest.Samples.Models
         }
         public virtual DbSet<Blog> Blogs { get; set; }
         public virtual DbSet<Post> Posts { get; set; }
+        public virtual DbSet<BlogTag> BlogTags { get; set; }
     }
     public class Blog
     {
@@ -54,7 +55,7 @@ namespace DTORepositoryTest.Samples.Models
     public class BlogTag
     {
         public int Id { get; set; }
-        public int? BlogId { get; set; }
+        public int BlogId { get; set; }
         public string Name { get; set; }
         public virtual Blog Blog { get; set; }
         

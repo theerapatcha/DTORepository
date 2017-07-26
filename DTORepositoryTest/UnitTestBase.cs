@@ -10,7 +10,9 @@ using System.Data.Common;
 using DTORepository;
 using Xunit.Abstractions;
 using Effort.Provider;
+using Xunit;
 
+[assembly: CollectionBehavior(DisableTestParallelization = true)]
 namespace DTORepositoryTest
 {
     public class UnitTestBase : IDisposable
@@ -56,6 +58,7 @@ namespace DTORepositoryTest
         public UnitTestBase(ITestOutputHelper output)
         {
             this._context = PrepareContext();
+            DTORepositoryContainer.InitializeDtoMapper<BloggingContext>();
         }
 
         #region IDisposable Support
