@@ -56,7 +56,6 @@
     <Compile Include="DTORepositoryContainer.cs" />
     <Compile Include="Internal\BuildFilter.cs" />
     <Compile Include="Internal\EfExtension.cs" />
-    <Compile Include="Internal\EntityCollectionValueResolver.cs" />
     <Compile Include="Models\Mappable.cs" />
     <Compile Include="Models\DtoBase.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
