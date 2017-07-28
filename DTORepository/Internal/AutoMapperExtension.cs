@@ -64,7 +64,7 @@ namespace DTORepository.Internal
                  if (srcEntity == null)
                  {
                      status.Combine(src.CreateDataFromDto(dbContext, dest));
-                     src.SetupRestOfEntity(dbContext, new TEntity());
+                     src.SetupRestOfEntity(dbContext, dest);
                  }
                  else
                  {

@@ -20,7 +20,7 @@
       "ORM",
       "Repository"
     ],
-    "releaseNotes": "Fixed issues where nested entity collection cannot be updated by using AutoMapper.Collection",
+    "releaseNotes": "Fixed SetupRestOfEntity not working when creating a new dto",
     "projectUrl": "https://github.com/theerapatcha/DTORepository",
     "licenseUrl": "https://raw.githubusercontent.com/theerapatcha/DTORepository/master/LICENSE",
     "requireLicenseAcceptance": false,

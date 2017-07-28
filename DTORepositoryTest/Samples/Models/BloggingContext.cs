@@ -48,6 +48,7 @@ namespace DTORepositoryTest.Samples.Models
         public string Title { get; set; }
         public string Content { get; set; }
         public string EdittedContent { get; set; }
+        public int NumberOfEditted { get; set; }
         public DateTime CreatedDate { get; set; }
         public DateTime UpdatedDate { get; set; }
         public virtual ICollection<Blog> Blogs { get; set; }

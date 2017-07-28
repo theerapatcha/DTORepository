@@ -53,6 +53,11 @@ namespace DTORepositoryTest.Samples.Dtos
             post.CreatedDate = DateTime.MaxValue;
             return status;
         }
+        protected override Post SetupRestOfEntity(DbContext context, Post entity)
+        {
+            entity.NumberOfEditted = entity.NumberOfEditted+1;
+            return base.SetupRestOfEntity(context, entity);
+        }
         protected override ISuccessOrErrors<Post> UpdateDataFromDto(DbContext context, Post newPost, Post oldPost)
         {
             var status = base.UpdateDataFromDto(context, newPost, oldPost);

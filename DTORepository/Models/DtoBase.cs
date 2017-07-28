@@ -30,11 +30,6 @@ namespace DTORepository.Models
         private IMappingExpression<TEntity, TDto> CreateEntityToDtoMapping(Profile profile)
         {
             var expression = profile.CreateMap<TEntity, TDto>();
-            if(EntityToDtoMapping2 != null)
-            {
-                expression.AfterMap(EntityToDtoMapping2);
-            }
-            
             if (EntityToDtoMapping != null)
             {
                 EntityToDtoMapping.Invoke(expression);
@@ -48,7 +43,6 @@ namespace DTORepository.Models
                 .AfterMapSetEntityState();
         }
         protected virtual Action<IMappingExpression<TEntity, TDto>> EntityToDtoMapping { get { return null; } }
-        protected virtual Action<TEntity, TDto> EntityToDtoMapping2 { get { return null; } }
         protected internal virtual TEntity SetupRestOfDto(DbContext context, TEntity entity)
         {
             return entity;

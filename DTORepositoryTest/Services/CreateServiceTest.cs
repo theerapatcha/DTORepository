@@ -56,6 +56,7 @@ namespace DTORepositoryTest.Services
             Assert.NotEqual(0, result.Result.Posts[0].PostId);
             Assert.NotEqual(0, result.Result.Posts[1].PostId);
             Assert.Equal(DateTime.MaxValue, entity.Posts.ToList()[0].CreatedDate);
+            Assert.Equal(1, entity.Posts.ToList()[0].NumberOfEditted);
             Assert.Equal(DateTime.MaxValue, entity.Posts.ToList()[1].CreatedDate);
         }
         [Fact]
@@ -77,6 +78,7 @@ namespace DTORepositoryTest.Services
             Assert.Equal("Test Create2", result.Result.Name);
             Assert.Equal(1, result.Result.Posts[0].PostId);
             Assert.Equal(DateTime.MaxValue, entity.Posts.ToList()[0].UpdatedDate);
+            Assert.Equal(1, entity.Posts.ToList()[0].NumberOfEditted);
             Assert.Equal(1, entity.Posts.Count);
         }
         [Fact]
