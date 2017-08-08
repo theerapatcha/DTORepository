@@ -21,7 +21,7 @@ namespace DTORepositoryTest
         protected BloggingContext _context;
         protected DbConnection _connection;
         public BloggingContext PrepareContext()
-        {           
+        {
             _connection =
             Effort.DbConnectionFactory.CreateTransient();
             BloggingContext context = new BloggingContext(_connection);
@@ -57,6 +57,7 @@ namespace DTORepositoryTest
         }
         public UnitTestBase(ITestOutputHelper output)
         {
+            Effort.Provider.EffortProviderConfiguration.RegisterProvider();
             this._context = PrepareContext();
             DTORepositoryContainer.InitializeDtoMapper<BloggingContext>();
         }

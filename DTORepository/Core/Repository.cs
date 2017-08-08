@@ -15,9 +15,9 @@ namespace DTORepository.Core
         where TEntity: class, new()
     {
         IQueryable<TDto> List<TDto>() where TDto : DtoBase<TEntity, TDto>, new();
-        ISuccessOrErrors<IList<TDto>> Query<TDto>(Expression<Func<TEntity, bool>> predicate)
+        ISuccessOrErrors<IList<TDto>> Query<TDto>(Expression<Func<TDto, bool>> predicate)
             where TDto : DtoBase<TEntity, TDto>, new();
-        Task<ISuccessOrErrors<IList<TDto>>> QueryAsync<TDto>(Expression<Func<TEntity, bool>> predicate)
+        Task<ISuccessOrErrors<IList<TDto>>> QueryAsync<TDto>(Expression<Func<TDto, bool>> predicate)
             where TDto : DtoBase<TEntity, TDto>, new();
         ISuccessOrErrors<TDto> Get<TDto>(params object[] identifiers) where TDto : DtoBase<TEntity,TDto>, new();
         Task<ISuccessOrErrors<TDto>> GetAsync<TDto>(params object[] identifiers) where TDto : DtoBase<TEntity, TDto>, new();
@@ -85,7 +85,7 @@ namespace DTORepository.Core
                 return SuccessOrErrors<TDto>.ConvertNonResultStatus(err);
             }
         }
-        public ISuccessOrErrors<IList<TDto>> Query<TDto>(Expression<Func<TEntity, bool>> predicate)
+        public ISuccessOrErrors<IList<TDto>> Query<TDto>(Expression<Func<TDto, bool>> predicate)
           where TDto : DtoBase<TEntity, TDto>, new()
         {
             try
@@ -103,7 +103,7 @@ namespace DTORepository.Core
                 return SuccessOrErrors<IList<TDto>>.ConvertNonResultStatus(err);
             }
 }
-        public async Task<ISuccessOrErrors<IList<TDto>>> QueryAsync<TDto>(Expression<Func<TEntity, bool>> predicate)
+        public async Task<ISuccessOrErrors<IList<TDto>>> QueryAsync<TDto>(Expression<Func<TDto, bool>> predicate)
          where TDto : DtoBase<TEntity, TDto>, new()
         {
             try

@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using DTORepository.Common;
+using DTORepository.Internal;
 using DTORepository.Models;
 using DTORepository.Services;
 using System;
@@ -18,9 +19,9 @@ namespace DTORepository.Services
     {
         IQueryable<TDto> List<TDto>()
             where TDto : DtoBase<TEntity, TDto>, new();
-        ISuccessOrErrors<IList<TDto>> Query<TDto>(Expression<Func<TEntity, bool>> predicate)
+        ISuccessOrErrors<IList<TDto>> Query<TDto>(Expression<Func<TDto, bool>> predicate)
             where TDto : DtoBase<TEntity, TDto>, new();
-        Task<ISuccessOrErrors<IList<TDto>>> QueryAsync<TDto>(Expression<Func<TEntity, bool>> predicate)
+        Task<ISuccessOrErrors<IList<TDto>>> QueryAsync<TDto>(Expression<Func<TDto, bool>> predicate)
             where TDto : DtoBase<TEntity, TDto>, new();
 
     }
@@ -37,13 +38,17 @@ namespace DTORepository.Services
         {
             if (!new TDto().AllowedActions.HasFlag(ActionFlags.List))
                 throw new InvalidOperationException("Dto is not allowed for this kind of action");
-            return dbContext.Set<TEntity>().ProjectTo<TDto>(DTORepositoryContainer.Mapper.ConfigurationProvider, new Dictionary<string, object>
-            {
-                ["DbContext"] = dbContext,
-                ["ActionFlags"] = ActionFlags.List
+            return new DTOQueryable<TEntity, TDto>(dbContext, opts => {
+                opts.Items["ActionFlags"] = ActionFlags.List;
+                opts.Items["DbContext"] = dbContext;
             });
+            //return dbContext.GetQueryable<TEntity, TDto>(DTORepositoryContainer.Mapper, new Dictionary<string, object>
+            //{
+            //    ["DbContext"] = dbContext,
+            //    ["ActionFlags"] = ActionFlags.List
+            //});
         }
-        public ISuccessOrErrors<IList<TDto>> Query<TDto>(Expression<Func<TEntity, bool>> predicate)
+        public ISuccessOrErrors<IList<TDto>> Query<TDto>(Expression<Func<TDto, bool>> predicate)
             where TDto : DtoBase<TEntity, TDto>, new()
         {
 
@@ -51,12 +56,16 @@ namespace DTORepository.Services
             //var dtos = dbContext.Set<TEntity>().Where(predicate).ProjectTo<TDto>(DtoHelper.Mapper.ConfigurationProvider).ToList();
             if (!new TDto().AllowedActions.HasFlag(ActionFlags.List))
                 return status.AddSingleError("Dto is not allowed for this kind of action");
-            var entities = dbContext.Set<TEntity>().Where(predicate);
-            var dtos = DTORepositoryContainer.Mapper.Map<IList<TDto>>(entities, opts => opts.Items["ActionFlags"] = ActionFlags.List);
+            var dtos = new DTOQueryable<TEntity, TDto>(dbContext, opts =>
+            {
+                opts.Items["ActionFlags"] = ActionFlags.List;
+                opts.Items["DbContext"] = dbContext;
+            }).Where(predicate).ToList();
+            
             return status.SetSuccessWithResult(dtos, "Success");
         
         }
-        public Task<ISuccessOrErrors<IList<TDto>>> QueryAsync<TDto>(Expression<Func<TEntity, bool>> predicate)
+        public Task<ISuccessOrErrors<IList<TDto>>> QueryAsync<TDto>(Expression<Func<TDto, bool>> predicate)
            where TDto : DtoBase<TEntity, TDto>, new()
         {
             return Task.Run(() =>

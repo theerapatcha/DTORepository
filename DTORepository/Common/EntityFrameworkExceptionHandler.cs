@@ -33,7 +33,7 @@ namespace DTORepository.Common
                 {
                     errors.AddNamedParameterError(
                         eve.Entity.GetType().Name,
-                        $"Entity of type {eve.Entity.GetType().Name} in state {eve.State} could not be updated"
+                        $"Entity of type {eve.Entity.GetType().Name} in state {eve.State} could not be updated, [{ex.InnerException.ToString()}]"
                     );
                 }
             }

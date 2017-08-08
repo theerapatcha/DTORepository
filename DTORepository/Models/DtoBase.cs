@@ -30,10 +30,17 @@ namespace DTORepository.Models
         private IMappingExpression<TEntity, TDto> CreateEntityToDtoMapping(Profile profile)
         {
             var expression = profile.CreateMap<TEntity, TDto>();
-            if (EntityToDtoMapping != null)
+            if(EntityToDtoProjection != null)
             {
-                EntityToDtoMapping.Invoke(expression);
+                EntityToDtoProjection.Invoke(expression);
             }
+            expression.AfterMap((entity, dto, ctx) =>
+            {
+                var context = (DbContext) ctx.Items["DbContext"];
+                dto.SetupRestOfDto(context, entity);
+            });
+            
+            
             return expression;
         }
         private IMappingExpression<TDto, TEntity> CreateDtoToEntityMapping(Profile profile)
@@ -42,15 +49,15 @@ namespace DTORepository.Models
                 .ConstructUsingExistingObject()
                 .AfterMapSetEntityState();
         }
-        protected virtual Action<IMappingExpression<TEntity, TDto>> EntityToDtoMapping { get { return null; } }
-        protected internal virtual TEntity SetupRestOfDto(DbContext context, TEntity entity)
+        protected internal virtual TDto SetupRestOfDto(DbContext context, TEntity entity)
         {
-            return entity;
+            return (TDto) this;
         }
         protected internal virtual TEntity SetupRestOfEntity(DbContext context, TEntity entity)
         {
             return entity;
         }
+        protected internal virtual Action<IMappingExpression<TEntity, TDto>> EntityToDtoProjection => null;
         protected internal virtual ISuccessOrErrors<TEntity> CreateDataFromDto(DbContext context, TEntity destination)
         {
             context.Set<TEntity>().Add(destination);

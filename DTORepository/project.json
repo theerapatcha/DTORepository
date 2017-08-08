@@ -20,7 +20,7 @@
       "ORM",
       "Repository"
     ],
-    "releaseNotes": "Fixed SetupRestOfEntity not working when creating a new dto",
+    "releaseNotes": "Fixed SetupRestOfDto not working on getting/listing entities",
     "projectUrl": "https://github.com/theerapatcha/DTORepository",
     "licenseUrl": "https://raw.githubusercontent.com/theerapatcha/DTORepository/master/LICENSE",
     "requireLicenseAcceptance": false,

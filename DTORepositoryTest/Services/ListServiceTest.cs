@@ -1,4 +1,5 @@
-﻿using DTORepository.Services;
+﻿using DTORepository.Common;
+using DTORepository.Services;
 using DTORepositoryTest.Samples.Dtos;
 using DTORepositoryTest.Samples.Models;
 using System;
@@ -58,11 +59,19 @@ namespace DTORepositoryTest.Services
             Assert.Equal("Dummy Blog #1", result[0].Name);
         }
         [Fact]
-        public void TestList_List_Post()
+        public void TestList_List_Post_ByPostId_And_NumberofBlogs_1()
         {
             IListService<Post> listService = new ListService<Post>(this._context);
-            var queryable = listService.List<PostDto>();
-            var result = queryable.Where(x => x.PostId == 1).ToList();
+            var queryable = listService.List<PostDto>().Where(x => x.PostId == 1).Where(x=>x.NumberOfBlogsBelongTo == 0);
+             var result = queryable.ToList();
+            Assert.Equal(0, result.Count);
+        }
+        [Fact]
+        public void TestList_List_Post_ByPostId_And_NumberofBlogs_2()
+        {
+            IListService<Post> listService = new ListService<Post>(this._context);
+            var queryable = listService.List<PostDto>().Where(x => x.PostId == 1 && x.NumberOfBlogsBelongTo == 1 && x.PostId != 2);
+            var result = queryable.ToList();
             Assert.Equal(1, result.Count);
             Assert.Equal(1, result[0].NumberOfBlogsBelongTo);
         }

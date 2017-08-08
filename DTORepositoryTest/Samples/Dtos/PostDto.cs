@@ -23,28 +23,18 @@ namespace DTORepositoryTest.Samples.Dtos
         [IgnoreRetrievingFor(ActionFlags.Get)]
         public Nullable<int> NumberOfBlogsBelongTo { get; set; }
         protected override ActionFlags AllowedActions => ActionFlags.All;
-        //protected override Action<Post, PostDto> EntityToDtoMapping
-        //{
-        //    get
-        //    {
-        //        return (s, d) => d.NumberOfBlogsBelongTo = s.Blogs.Count();
-        //    }
-        //}
-        protected override Action<IMappingExpression<Post, PostDto>> EntityToDtoMapping
+        protected override Action<IMappingExpression<Post, PostDto>> EntityToDtoProjection
         {
             get
             {
-                return m => m.ForMember(d => d.NumberOfBlogsBelongTo,
-                    opt => opt.MapFrom(s => s.Blogs.Count()));
+                return (opt) => opt.ForMember(d => d.NumberOfBlogsBelongTo,
+                    m => m.MapFrom(s => (int?) s.Blogs.Count()));
             }
-
         }
-        //protected override Action<Post, PostDto> EntityToDtoMapping2
+        //protected override PostDto SetupRestOfDto(DbContext context, Post entity)
         //{
-        //    get
-        //    {
-        //        return (s, d) => d.NumberOfBlogsBelongTo = s.Blogs.Count();
-        //    }
+        //    this.NumberOfBlogsBelongTo = entity.Blogs.Count();
+        //    return this;
         //}
         protected override ISuccessOrErrors<Post> CreateDataFromDto(DbContext context, Post newPost)
         {

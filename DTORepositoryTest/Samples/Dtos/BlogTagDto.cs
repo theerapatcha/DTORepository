@@ -22,14 +22,10 @@ namespace DTORepositoryTest.Samples.Dtos
         public string Name { get; set; }        
         public int BlogId2 { get; set; }
         protected override ActionFlags AllowedActions => ActionFlags.All;
-        protected override Action<IMappingExpression<BlogTag, BlogTagDto>> EntityToDtoMapping
+        protected override BlogTagDto SetupRestOfDto(DbContext context, BlogTag entity)
         {
-            get
-            {
-                return m => m.ForMember(d => d.BlogId2,
-                    opt => opt.MapFrom(s => s.Blog.BlogId));
-            }
-
+            this.BlogId2 = entity.Blog.BlogId;
+            return base.SetupRestOfDto(context, entity);
         }
     }
 

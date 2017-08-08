@@ -47,7 +47,10 @@ namespace DTORepository.Services
                 if (status.IsValid)
                 {
                     dbContext.SaveChanges();
-                    DTORepositoryContainer.Mapper.Map<TEntity, TDto>(entity, dto);
+                    DTORepositoryContainer.Mapper.Map<TEntity, TDto>(entity, dto, opts => {
+                        opts.Items["ActionFlags"] = actions;
+                        opts.Items["DbContext"] = dbContext;
+                    });
                     return status.SetSuccessWithResult(dto, "Success");
                 }
             }
@@ -72,7 +75,10 @@ namespace DTORepository.Services
                 if (status.IsValid)
                 {
                     await dbContext.SaveChangesAsync();
-                    DTORepositoryContainer.Mapper.Map<TEntity, TDto>(entity, dto);
+                    DTORepositoryContainer.Mapper.Map<TEntity, TDto>(entity, dto, opts => {
+                            opts.Items["ActionFlags"] = actions;
+                            opts.Items["DbContext"] = dbContext;
+                        });
                     return status.SetSuccessWithResult(dto, "Success");
                 }
             }

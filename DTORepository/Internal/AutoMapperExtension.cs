@@ -1,4 +1,5 @@
 ﻿using AutoMapper;
+using AutoMapper.QueryableExtensions;
 using DTORepository.Attributes;
 using DTORepository.Common;
 using DTORepository.Models;
@@ -184,5 +185,19 @@ namespace DTORepository.Internal
         //        ));
         //    return expression;
         //}
+        public static IQueryable<TDto> GetQueryable<TEntity, TDto>(this DbContext dbContext, IMapper mapper, Dictionary<string, object> parameters)
+            where TEntity : class, new()
+            where TDto : DtoBase<TEntity, TDto>, new()
+        {
+            return dbContext.Set<TEntity>()
+                .UseAsDataSource(mapper)
+                .For<TDto>(parameters)
+                .OnEnumerated((dtos) => {
+                    foreach (TDto dto in dtos)
+                    {
+                        dto.SetupRestOfDto(dbContext, dto.FindItemTrackedForUpdate(dbContext));
+                    }
+                });
+        }
     }
 }

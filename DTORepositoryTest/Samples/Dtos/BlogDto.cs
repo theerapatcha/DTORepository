@@ -30,17 +30,11 @@ namespace DTORepositoryTest.Samples.Dtos
         public int NumberOfPosts { get; set; }
 
         protected override ActionFlags AllowedActions => ActionFlags.All;
-        protected override Action<IMappingExpression<Blog, BlogDto>> EntityToDtoMapping
+        protected override BlogDto SetupRestOfDto(DbContext context, Blog entity)
         {
-            get
-            {
-                return m => m
-                    .ForMember(d => d.NumberOfPosts,
-                        opt => opt.MapFrom(s => s.Posts.Count()))
-                    .ForMember(d => d.PostIds,
-                        opt => opt.MapFrom(s => s.Posts.Select(x => x.PostId).ToList()));
-            }
-            
+            this.NumberOfPosts = entity.Posts.Count();
+            this.PostIds = entity.Posts.Select(x => x.PostId).ToList();
+            return base.SetupRestOfDto(context, entity);
         }
         protected override ISuccessOrErrors<Blog> CreateDataFromDto(DbContext context, Blog newBlog)
         {

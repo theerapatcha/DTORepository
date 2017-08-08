@@ -40,7 +40,10 @@ namespace DTORepository.Services
             var entity = dbContext.Set<TEntity>()
               .Where(BuildFilter.CreateFilter<TEntity>(dbContext.GetKeyProperties<TEntity>(), identifiers))
               .SingleOrDefault();
-            var dto = DTORepositoryContainer.Mapper.Map<TDto>(entity, opts => opts.Items["ActionFlags"] = ActionFlags.Get);
+            var dto = DTORepositoryContainer.Mapper.Map<TDto>(entity, opts => {
+                opts.Items["ActionFlags"] = ActionFlags.Get;
+                opts.Items["DbContext"] = dbContext;
+            });
             if (dto != null)
             {
                 return status.SetSuccessWithResult(dto, "Success");
@@ -59,7 +62,10 @@ namespace DTORepository.Services
             var entity = await dbContext.Set<TEntity>()
                 .Where(BuildFilter.CreateFilter<TEntity>(dbContext.GetKeyProperties<TEntity>(), identifiers))
                 .SingleOrDefaultAsync();
-            var dto = DTORepositoryContainer.Mapper.Map<TDto>(entity, opts => opts.Items["ActionFlags"] = ActionFlags.Get);
+            var dto = DTORepositoryContainer.Mapper.Map<TDto>(entity, opts => {
+                opts.Items["ActionFlags"] = ActionFlags.Get;
+                opts.Items["DbContext"] = dbContext;
+            });
 
             if (dto != null)
             {
