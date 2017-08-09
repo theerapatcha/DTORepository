@@ -20,7 +20,7 @@
       "ORM",
       "Repository"
     ],
-    "releaseNotes": "Fixed SetupRestOfDto not working on getting/listing entities",
+    "releaseNotes": "Fixed bugs when using any execute operations of linq (First, Single, Count, Order , etc...)",
     "projectUrl": "https://github.com/theerapatcha/DTORepository",
     "licenseUrl": "https://raw.githubusercontent.com/theerapatcha/DTORepository/master/LICENSE",
     "requireLicenseAcceptance": false,

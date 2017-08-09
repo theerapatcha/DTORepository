@@ -36,6 +36,11 @@ namespace DTORepository.Models
             }
             expression.AfterMap((entity, dto, ctx) =>
             {
+                var a = ctx.Items.ContainsKey("DbContext");
+                if(!a)
+                {
+                    var x = a;
+                }
                 var context = (DbContext) ctx.Items["DbContext"];
                 dto.SetupRestOfDto(context, entity);
             });

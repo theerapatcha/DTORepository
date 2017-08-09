@@ -49,6 +49,7 @@
     <Compile Include="Common\ActionFlags.cs" />
     <Compile Include="Common\ArrayEqualityComparer.cs" />
     <Compile Include="Common\DTOQueryable.cs" />
+    <Compile Include="Core\Extensions.cs" />
     <Compile Include="Internal\AutoMapperExtension.cs" />
     <Compile Include="Internal\CommonExtension.cs" />
     <Compile Include="Common\EntityFrameworkExceptionHandler.cs" />

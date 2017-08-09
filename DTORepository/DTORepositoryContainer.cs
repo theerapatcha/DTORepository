@@ -46,7 +46,6 @@ namespace DTORepository
                     var obj = (Mappable)Activator.CreateInstance(type);
                     cfg.AddProfile(obj.GetMapperProfile());
                 }
-                
             });
             _Mapper = mapperConfig.CreateMapper();
         }

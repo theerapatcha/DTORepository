@@ -76,6 +76,31 @@ namespace DTORepositoryTest.Services
             Assert.Equal(1, result[0].NumberOfBlogsBelongTo);
         }
         [Fact]
+        public void TestList_List_Post_Using_LINQ_Operations()
+        {
+            IListService<Post> listService = new ListService<Post>(this._context);
+            var queryable = listService.List<PostDto>();
+            
+            Assert.Null(queryable.Where(x=>x.PostId == 999).FirstOrDefault());
+            Assert.Null(queryable.Where(x => x.PostId == 999).SingleOrDefault());
+            Assert.Null(queryable.FirstOrDefault(x => x.PostId == 999));
+            Assert.Null(queryable.SingleOrDefault(x => x.PostId == 999));            
+            Assert.Throws<InvalidOperationException>(() => queryable.Where(x => x.PostId == 999).Single());
+            Assert.Throws<InvalidOperationException>(() => queryable.Where(x => x.PostId == 999).First());
+            Assert.Throws<InvalidOperationException>(() => queryable.Single(x => x.PostId == 999));
+            Assert.Throws<InvalidOperationException>(() => queryable.First(x => x.PostId == 999));
+            var a = queryable.Where(x => x.PostId == 1).FirstOrDefault();
+            Assert.NotNull(queryable.Where(x => x.PostId == 1).FirstOrDefault());
+            Assert.NotNull(queryable.Where(x => x.PostId == 1).SingleOrDefault());
+            Assert.NotNull(queryable.FirstOrDefault(x => x.PostId == 1));
+            Assert.NotNull(queryable.SingleOrDefault(x => x.PostId == 1));
+            Assert.NotNull(queryable.Where(x => x.NumberOfBlogsBelongTo == 1).FirstOrDefault());
+            Assert.NotNull(queryable.FirstOrDefault(x => x.NumberOfBlogsBelongTo == 1));
+            Assert.Equal(4, queryable.Where(x => x.NumberOfBlogsBelongTo == 1).Count());
+            Assert.Equal(4, queryable.Count(x => x.NumberOfBlogsBelongTo == 1));
+            Assert.Equal(4, queryable.OrderByDescending(x => x.PostId).First().PostId);
+        }
+        [Fact]
         public void TestList_Query_Post()
         {
             IListService<Post> listService = new ListService<Post>(this._context);
