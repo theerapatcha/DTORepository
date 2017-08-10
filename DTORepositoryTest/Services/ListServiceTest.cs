@@ -67,7 +67,7 @@ namespace DTORepositoryTest.Services
             Assert.Equal(0, result.Count);
         }
         [Fact]
-        public void TestList_List_Post_ByPostId_And_NumberofBlogs_2()
+        public void TestList_List_Post_By_PostDTO_PostId_And_NumberofBlogs_2()
         {
             IListService<Post> listService = new ListService<Post>(this._context);
             var queryable = listService.List<PostDto>().Where(x => x.PostId == 1 && x.NumberOfBlogsBelongTo == 1 && x.PostId != 2);
@@ -75,6 +75,16 @@ namespace DTORepositoryTest.Services
             Assert.Equal(1, result.Count);
             Assert.Equal(1, result[0].NumberOfBlogsBelongTo);
         }
+        [Fact]
+        public void TestList_List_Post_By_Post_PostId_And_NumberofBlogs_2()
+        {
+            IListService<Post> listService = new ListService<Post>(this._context);
+            var queryable = listService.List<PostDto>(x => x.PostId == 1).Where(x => x.NumberOfBlogsBelongTo == 1 && x.PostId != 2);
+            var result = queryable.ToList();
+            Assert.Equal(1, result.Count);
+            Assert.Equal(1, result[0].NumberOfBlogsBelongTo);
+        }
+
         [Fact]
         public void TestList_List_Post_Using_LINQ_Operations()
         {
@@ -98,7 +108,8 @@ namespace DTORepositoryTest.Services
             Assert.NotNull(queryable.FirstOrDefault(x => x.NumberOfBlogsBelongTo == 1));
             Assert.Equal(4, queryable.Where(x => x.NumberOfBlogsBelongTo == 1).Count());
             Assert.Equal(4, queryable.Count(x => x.NumberOfBlogsBelongTo == 1));
-            Assert.Equal(4, queryable.OrderByDescending(x => x.PostId).First().PostId);
+            var c = queryable.OrderByDescending(x => x.PostId);
+            Assert.Equal(4, queryable.OrderByDescending(x => x.PostId).ThenBy(x=>x.NumberOfBlogsBelongTo).First().PostId);
         }
         [Fact]
         public void TestList_Query_Post()

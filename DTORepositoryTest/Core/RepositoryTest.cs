@@ -37,9 +37,17 @@ namespace DTORepositoryTest.Core
         public void WhenCall_List_Will_Trigger_ListService_List()
         {
             // when
+            _repository.List<BlogDto>(x=>x.BlogId == 1);
+            // then
+            m_ListService.Verify(service => service.List<BlogDto>(x => x.BlogId == 1), Times.Once);
+        }
+        [Fact]
+        public void WhenCall_List_Will_Trigger_ListService_List_No_Predicate()
+        {
+            // when
             _repository.List<BlogDto>();
             // then
-            m_ListService.Verify(service => service.List<BlogDto>(), Times.Once);
+            m_ListService.Verify(service => service.List<BlogDto>(null), Times.Once);
         }
         [Fact]
         public void WhenCall_Query_Will_Trigger_ListService_Query()
@@ -48,6 +56,14 @@ namespace DTORepositoryTest.Core
             _repository.Query<BlogDto>(x => x.BlogId == 1);
             // then
             m_ListService.Verify(service => service.Query<BlogDto>(x => x.BlogId == 1), Times.Once);
+        }
+        [Fact]
+        public void WhenCall_Query_Will_Trigger_ListService_Query_No_Predicate()
+        {
+            // when
+            _repository.Query<BlogDto>();
+            // then
+            m_ListService.Verify(service => service.Query<BlogDto>(null), Times.Once);
         }
         [Fact]
         public void WhenCall_Insert_Will_Trigger_CreateOrUpdateService_CreateOrUpdate_FalseUpsert()

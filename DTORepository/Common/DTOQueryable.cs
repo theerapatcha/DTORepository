@@ -36,7 +36,7 @@ namespace DTORepository.Common
             this.dtoQueryable = new List<TDto>().AsQueryable();
             this.opts = opts;
         }
-        DTOQueryable(DbContext dbContext, Action<AutoMapper.IMappingOperationOptions> opts, IQueryable<TEntity> queryable)
+        public DTOQueryable(DbContext dbContext, Action<AutoMapper.IMappingOperationOptions> opts, IQueryable<TEntity> queryable)
         {
             this.dbContext = dbContext;
             this.queryable = queryable;
@@ -104,22 +104,16 @@ namespace DTORepository.Common
 
         public TResult Execute<TResult>(Expression expression)
         {
-            try
+            
+            var list = new List<TDto>();
+            var enumerator = GetEnumerator();
+            while (enumerator.MoveNext())
             {
-                var list = new List<TDto>();
-                var enumerator = GetEnumerator();
-                while (enumerator.MoveNext())
-                {
-                    list.Add(enumerator.Current);
-                }
-                var dtoMethodCallExpression = expression as MethodCallExpression;
-                var entityMethodCallExpression = ConvertMethodCallExpression<TDto, TDto>(dtoMethodCallExpression, list.AsQueryable());
-                return list.AsQueryable().Provider.Execute<TResult>(entityMethodCallExpression);
+                list.Add(enumerator.Current);
             }
-            catch (Exception e)
-            {
-                throw e;
-            }
+            var dtoMethodCallExpression = expression as MethodCallExpression;
+            var entityMethodCallExpression = ConvertMethodCallExpression<TDto, TDto>(dtoMethodCallExpression, list.AsQueryable());
+            return list.AsQueryable().Provider.Execute<TResult>(entityMethodCallExpression);
         }
 
         private MethodCallExpression ConvertMethodCallExpression<TSrc, TDest>(MethodCallExpression expression, IQueryable targetQueryable)
@@ -138,7 +132,9 @@ namespace DTORepository.Common
             var entityArgs = entityMethod.GetParameters()
                 .Select((x, i) =>
                 {
-                    if (x.ParameterType == typeof(IQueryable<TDest>)) return targetQueryable.Expression;
+                    if (x.ParameterType == typeof(IQueryable<TDest>) || 
+                    x.ParameterType.GetInterfaces().Any(type => type == typeof(IQueryable<TDest>)))
+                        return targetQueryable.Expression;
                     else if (dtoArgs[i] is UnaryExpression)
                     {
                         var unaryExp = dtoArgs[i] as UnaryExpression;

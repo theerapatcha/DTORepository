@@ -12,7 +12,7 @@
     "win": {}
   },
   "packOptions": {
-    "summary": "Enhance the seperation of concerns, most complicated logics can be implemented in DTO classes. This makes the code maintainable. This library also apply a concept of generic repository and unit of work to handle transactions between entities and contexts.",
+    "summary": "Enhance the seperation of concerns. Most complicated logics can be implemented in DTO classes. Thus, the code is more maintainable. This library also apply a concept of generic repository and unit of work to handle transactions between entities and contexts.",
     "tags": [
       "DTO",
       "EF",
@@ -20,7 +20,7 @@
       "ORM",
       "Repository"
     ],
-    "releaseNotes": "Fixed bugs when using any execute operations of linq (First, Single, Count, Order , etc...)",
+    "releaseNotes": "Added interfaces for list service to use TEntity predicate as an arguments, Fixed bugs when there are sequence of execute operations",
     "projectUrl": "https://github.com/theerapatcha/DTORepository",
     "licenseUrl": "https://raw.githubusercontent.com/theerapatcha/DTORepository/master/LICENSE",
     "requireLicenseAcceptance": false,
