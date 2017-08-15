@@ -1,4 +1,5 @@
 ﻿using DTORepository.Core;
+using DTORepositoryTest.Samples.Models;
 using Moq;
 using System.Data.Entity;
 using Xunit;
@@ -8,12 +9,12 @@ namespace DTORepositoryTest.Core
 {
     public class UnitOfWorkFactoryTest : UnitTestBase
     {
-        UnitOfWorkFactory _factory;
+        UnitOfWorkFactory<BloggingContext> _factory;
         
         public UnitOfWorkFactoryTest(ITestOutputHelper output) : base(output)
         {
-            DbContext context = new Mock<DbContext>().Object;
-            _factory = new UnitOfWorkFactory(context);
+            BloggingContext context = new Mock<BloggingContext>().Object;
+            _factory = new UnitOfWorkFactory<BloggingContext>(context);
         }
         [Fact]
         public void Create_UnitOfWork_With_Correct_GenericType()
@@ -21,7 +22,7 @@ namespace DTORepositoryTest.Core
             // when
             var UnitOfWork = _factory.CreateUnitOfWork();
             // then
-            Assert.IsType<UnitOfWork>(UnitOfWork);
+            Assert.IsType<UnitOfWork<BloggingContext>>(UnitOfWork);
         }
     }
 }

@@ -1,4 +1,7 @@
-﻿using DTORepository.Models;
+﻿using AutoMapper;
+using AutoMapper.XpressionMapper.Extensions;
+using DTORepository.Internal;
+using DTORepository.Models;
 using System;
 using System.Collections;
 using System.Collections.Generic;
@@ -12,23 +15,24 @@ using System.Threading.Tasks;
 
 namespace DTORepository.Common
 {
-    public class DTOQueryable<TEntity, TDto> : IQueryable<TDto>, IOrderedQueryable<TDto>, IQueryProvider, IDbAsyncEnumerable<TDto>
-        where TDto : DtoBase
+    public class DTOQueryable<TContext, TEntity, TDto> : IQueryable<TDto>, IOrderedQueryable<TDto>, IQueryProvider, IDbAsyncEnumerable<TDto>
+        where TContext: DbContext
+        where TDto : DtoBase<TContext, TEntity, TDto>, new()
         where TEntity: class,new()
     {
-        DbContext dbContext;
+        TContext dbContext;
         IQueryable<TEntity> queryable;
         Action<AutoMapper.IMappingOperationOptions> opts;
         IQueryable<TDto> dtoQueryable;
         List<Expression<Func<TDto, bool>>> _tmpDtoExpression = new List<Expression<Func<TDto, bool>>>();
-        public DTOQueryable(DbContext dbContext)
+        public DTOQueryable(TContext dbContext)
         {
 
             this.dbContext = dbContext;
             this.queryable = dbContext.Set<TEntity>().AsQueryable();
             this.dtoQueryable = new List<TDto>().AsQueryable();
         }
-        public DTOQueryable(DbContext dbContext, Action<AutoMapper.IMappingOperationOptions> opts)
+        public DTOQueryable(TContext dbContext, Action<AutoMapper.IMappingOperationOptions> opts)
         {
             
             this.dbContext = dbContext;
@@ -36,7 +40,7 @@ namespace DTORepository.Common
             this.dtoQueryable = new List<TDto>().AsQueryable();
             this.opts = opts;
         }
-        public DTOQueryable(DbContext dbContext, Action<AutoMapper.IMappingOperationOptions> opts, IQueryable<TEntity> queryable)
+        public DTOQueryable(TContext dbContext, Action<AutoMapper.IMappingOperationOptions> opts, IQueryable<TEntity> queryable)
         {
             this.dbContext = dbContext;
             this.queryable = queryable;
@@ -90,12 +94,17 @@ namespace DTORepository.Common
             return CreateQuery<TEntity>(expression);
         }
 
-        public IQueryable<TElement> CreateQuery<TElement>(Expression expression)
+        public IQueryable<TDtoElement> CreateQuery<TDtoElement>(Expression expression)
         {
+            if (typeof(TDto) != typeof(TDtoElement)) throw new InvalidOperationException("Unsupport operation. Yet to be implemented");
+
             var dtoMethodCallExpression = expression as MethodCallExpression;
             var entityMethodCallExpression = ConvertMethodCallExpression<TDto, TEntity>(dtoMethodCallExpression, this.queryable);
             
-            return (IQueryable<TElement>) new DTOQueryable<TEntity, TDto>(dbContext, opts, this.queryable.Provider.CreateQuery<TEntity>(entityMethodCallExpression));
+            Type entityElementType = typeof(TDtoElement).ToEntityType();
+            Type myParameterizedSomeClass = typeof(DTOQueryable<,,>).MakeGenericType(typeof(TContext), entityElementType, typeof(TDtoElement));
+            ConstructorInfo constr = myParameterizedSomeClass.GetConstructor(new[] { typeof(TContext), typeof(Action<AutoMapper.IMappingOperationOptions>), typeof(IQueryable<>).MakeGenericType(entityElementType) });
+            return (IQueryable<TDtoElement>) constr.Invoke(new object[] { dbContext, opts, this.queryable.Provider.CreateQuery(entityMethodCallExpression) });
         }
         public object Execute(Expression expression)
         {

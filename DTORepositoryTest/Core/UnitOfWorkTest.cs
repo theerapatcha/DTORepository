@@ -9,12 +9,12 @@ namespace DTORepositoryTest.Core
 {
     public class UnitOfWorkTest : UnitTestBase
     {
-        RepositoryFactory repositoryFactory;
-        UnitOfWorkFactory unitOfWorkFactory;
+        RepositoryFactory<BloggingContext> repositoryFactory;
+        UnitOfWorkFactory<BloggingContext> unitOfWorkFactory;
         public UnitOfWorkTest(ITestOutputHelper output) : base(output) 
         {
-            repositoryFactory = new RepositoryFactory(this._context);
-            unitOfWorkFactory = new UnitOfWorkFactory(this._context);
+            repositoryFactory = new RepositoryFactory<BloggingContext>(this._context);
+            unitOfWorkFactory = new UnitOfWorkFactory<BloggingContext>(this._context);
         }
         [Fact]
         public async Task ExecuteAsync_Will_Rollback_Transaction_If_One_Failed()

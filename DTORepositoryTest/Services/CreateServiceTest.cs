@@ -18,7 +18,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void TestCreate_Blog()
         {
-            ICreateOrUpdateService<Blog> createOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> createOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = createOrUpdateService.CreateOrUpdate(new BlogDto
             {
                 Name = "Test Create",
@@ -38,7 +38,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void CreateBlogWith_NewPosts()
         {
-            ICreateOrUpdateService<Blog> createOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> createOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = createOrUpdateService.CreateOrUpdate(new BlogWithPostsCreateDto
             {
                 Name = "Test Create2",
@@ -62,7 +62,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void CreateBlogWith_ExistingPosts()
         {
-            ICreateOrUpdateService<Blog> createOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> createOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = createOrUpdateService.CreateOrUpdate(new BlogWithPostsCreateDto
             {
                 Name = "Test Create2",
@@ -84,7 +84,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void CreateBlogWith_ExisitingId_Should_Failed()
         {
-            ICreateOrUpdateService<Blog> createOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> createOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = createOrUpdateService.CreateOrUpdate(new BlogWithPostsCreateDto
             {
                 BlogId = 1,
@@ -100,7 +100,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void CreatePost()
         {
-            ICreateOrUpdateService<Post> createOrUpdateService = new CreateOrUpdateService<Post>(this._context);
+            ICreateOrUpdateService<BloggingContext, Post> createOrUpdateService = new CreateOrUpdateService<BloggingContext, Post>(this._context);
             var result = createOrUpdateService.CreateOrUpdate(new PostDto
             {
                 Title = "TestTitle2",
@@ -114,7 +114,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void Cannot_CreateOrUpdateBlog_With_BlogUpdateDto()
         {
-            ICreateOrUpdateService<Blog> createOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> createOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = createOrUpdateService.CreateOrUpdate(new BlogUpdateDto
             {
                 BlogId = 9, // not exist id
@@ -125,7 +125,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void Cannot_CreateBlog_With_BlogUpdateDto()
         {
-            ICreateOrUpdateService<Blog> createOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> createOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = createOrUpdateService.CreateOrUpdate(new BlogUpdateDto
             {
                 BlogId = 9,
@@ -136,7 +136,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void Can_UpdateBlog_With_BlogUpdateDto()
         {
-            ICreateOrUpdateService<Blog> createOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> createOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = createOrUpdateService.CreateOrUpdate(new BlogUpdateDto
             {
                 BlogId = 1, // exist id

@@ -13,7 +13,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void TestDetail_Blog()
         {
-            IDetailService<Blog> detailService = new DetailService<Blog>(this._context);
+            IDetailService<BloggingContext, Blog> detailService = new DetailService<BloggingContext, Blog>(this._context);
             var result = detailService.Get<BlogDto>(2);
             Assert.True(result.IsValid);
             Assert.Equal("Dummy Blog #2", result.Result.Name);
@@ -26,7 +26,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void TestDetail_Blog_Check_CanCall_Reference()
         {
-            IDetailService<Blog> detailService = new DetailService<Blog>(this._context);
+            IDetailService<BloggingContext, Blog> detailService = new DetailService<BloggingContext, Blog>(this._context);
             var result = detailService.Get<BlogDto>(1);
             Assert.True(result.IsValid);
             Assert.Equal("Dummy Blog #1", result.Result.Name);
@@ -38,7 +38,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void TestDetail_Get_Post()
         {
-            IDetailService<Post> detailService = new DetailService<Post>(this._context);
+            IDetailService<BloggingContext, Post> detailService = new DetailService<BloggingContext, Post>(this._context);
             var result = detailService.Get<PostDto>(1);
             Assert.Equal(1, result.Result.PostId);
             Assert.Null(result.Result.NumberOfBlogsBelongTo);

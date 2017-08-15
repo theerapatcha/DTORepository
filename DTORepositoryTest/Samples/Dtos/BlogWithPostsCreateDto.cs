@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DTORepositoryTest.Samples.Dtos
 {
-    class BlogWithPostsCreateDto : DtoBase<Blog, BlogWithPostsCreateDto>
+    class BlogWithPostsCreateDto : DtoBase<BloggingContext, Blog, BlogWithPostsCreateDto>
     {
         public int BlogId { get; set; }
         public string Name { get; set; }
@@ -18,7 +18,7 @@ namespace DTORepositoryTest.Samples.Dtos
         public List<PostDto> Posts { get; set; }
         public List<BlogTagDto> Tags { get; set; }
         protected override ActionFlags AllowedActions => ActionFlags.Create | ActionFlags.Update;
-        protected override ISuccessOrErrors<Blog> UpdateDataFromDto(DbContext context, Blog entity, Blog oldEntity)
+        protected override ISuccessOrErrors<Blog> UpdateDataFromDto(BloggingContext context, Blog entity, Blog oldEntity)
         {
             var dbContext = (BloggingContext) context;
             if (entity.Tags != null && entity.Tags != oldEntity.Tags)
@@ -30,7 +30,7 @@ namespace DTORepositoryTest.Samples.Dtos
             }
             return base.UpdateDataFromDto(context, entity, oldEntity);
         }
-        protected override Blog SetupRestOfEntity(DbContext context, Blog blog)
+        protected override Blog SetupRestOfEntity(BloggingContext context, Blog blog)
         {
             blog.CreatedDate = DateTime.MaxValue;
             return blog;

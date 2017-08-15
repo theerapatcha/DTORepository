@@ -13,18 +13,20 @@ using System.Threading.Tasks;
 
 namespace DTORepository.Services
 {
-    public interface IDeleteService<TEntity>
+    public interface IDeleteService<TContext, TEntity>
+        where TContext: DbContext
         where TEntity : class, new()
     {
         ISuccessOrErrors Delete(params object[] identifiers);
         Task<ISuccessOrErrors> DeleteAsync(params object[] identifiers);
 
     }
-    public class DeleteService<TEntity> : IDeleteService<TEntity>
+    public class DeleteService<TContext, TEntity> : IDeleteService<TContext, TEntity>
+        where TContext : DbContext
         where TEntity : class, new()
     {
-        public DbContext dbContext { get; }
-        public DeleteService(DbContext dbContext)
+        public TContext dbContext { get; }
+        public DeleteService(TContext dbContext)
         {
             this.dbContext = dbContext;
         }

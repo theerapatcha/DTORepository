@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using DTORepository.Attributes;
 using DTORepository.Internal;
+using DTORepository.Models;
 using System;
 using System.Collections.Generic;
 using System.Data.Entity;
@@ -45,6 +46,18 @@ namespace DTORepository.Internal
         {
             return (type.GetInterface("ICollection") != null);
         }
-       
+        public static Type ToEntityType(this Type type)
+        {
+
+            if (type.IsEnumerableType() || type.IsCollectionType())
+            {
+                return typeof(ICollection<>).MakeGenericType(ToEntityType(type.GenericTypeArguments[0]));
+            }
+            if (type.IsSubclassOf(typeof(DtoBase)))
+            {
+                return type.BaseType.GenericTypeArguments[1];
+            }
+            return type;
+        }
     }
 }

@@ -19,7 +19,7 @@ namespace DTORepositoryTest.Services
         public void TestUpdate_Blog_NameAndUrl_Only()
         {
             
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = CreateOrUpdateService.CreateOrUpdate(new BlogDto
             {
                 BlogId = 1,
@@ -41,7 +41,7 @@ namespace DTORepositoryTest.Services
         public void TestUpdate_Blog_Should_Cant_Update_Author()
         {
 
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = CreateOrUpdateService.CreateOrUpdate(new BlogDto
             {
                 BlogId = 1,
@@ -63,7 +63,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void TestUpdate_Blog_With_NotExistedId_Should_Fail()
         {
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = CreateOrUpdateService.CreateOrUpdate(new BlogDto
             {
                 BlogId = 100,
@@ -76,7 +76,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void UpdateBlogWithPosts_WithExistingPosts()
         {
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = CreateOrUpdateService.CreateOrUpdate(new BlogWithPostsCreateDto
             {
                 BlogId = 1,
@@ -104,7 +104,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void UpdateBlogWithPosts_RemoveAllPosts()
         {
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = CreateOrUpdateService.CreateOrUpdate(new BlogWithPostsCreateDto
             {
                 BlogId = 1,
@@ -124,7 +124,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void UpdateBlogWithPosts_UpdateWithNewBlogTags()
         {
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = CreateOrUpdateService.CreateOrUpdate(new BlogWithPostsCreateDto
             {
                 BlogId = 1,
@@ -149,7 +149,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void UpdateBlogWithPosts_RemoveAllTags()
         {
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = CreateOrUpdateService.CreateOrUpdate(new BlogWithPostsCreateDto
             {
                 BlogId = 1,
@@ -170,7 +170,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void UpdateBlogWithPosts_UndefinedTags_Should_Not_Remove_Tags()
         {
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = CreateOrUpdateService.CreateOrUpdate(new BlogWithPostsCreateDto
             {
                 BlogId = 1,
@@ -186,7 +186,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void UpdateBlogWithPosts_WithoutExistingPosts_Should_DeleteExistingPosts()
         {
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = CreateOrUpdateService.CreateOrUpdate(new BlogWithPostsCreateDto
             {
                 BlogId = 1,
@@ -211,7 +211,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void UpdateBlogWithPosts_WithExistingPostIds_Should()
         {
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = CreateOrUpdateService.CreateOrUpdate(new BlogWithPostIdsCreateDto
             {
                 BlogId = 1,
@@ -228,7 +228,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void UpdateBlogTag_Only_Name_field()
         {
-            ICreateOrUpdateService<BlogTag> CreateOrUpdateService = new CreateOrUpdateService<BlogTag>(this._context);
+            ICreateOrUpdateService<BloggingContext, BlogTag> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, BlogTag>(this._context);
             var result = CreateOrUpdateService.CreateOrUpdate(new BlogTagDto {
                 Id = 1,
                 Name = "TestUpdate"
@@ -241,7 +241,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public void UpdateBlogTag_Only_Name_Using_IgnoreMappingValue()
         {
-            ICreateOrUpdateService<BlogTag> CreateOrUpdateService = new CreateOrUpdateService<BlogTag>(this._context);
+            ICreateOrUpdateService<BloggingContext, BlogTag> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, BlogTag>(this._context);
             var result = CreateOrUpdateService.CreateOrUpdate(new BlogTagDto
             {
                 Id = 1,

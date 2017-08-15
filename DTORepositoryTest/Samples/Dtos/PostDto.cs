@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DTORepositoryTest.Samples.Dtos
 {
-    class PostDto : DtoBase<Post, PostDto>
+    class PostDto : DtoBase<BloggingContext, Post, PostDto>
     {
 
         public int PostId { get; set; }
@@ -36,19 +36,19 @@ namespace DTORepositoryTest.Samples.Dtos
         //    this.NumberOfBlogsBelongTo = entity.Blogs.Count();
         //    return this;
         //}
-        protected override ISuccessOrErrors<Post> CreateDataFromDto(DbContext context, Post newPost)
+        protected override ISuccessOrErrors<Post> CreateDataFromDto(BloggingContext context, Post newPost)
         {
             var status = base.CreateDataFromDto(context, newPost);
             var post = status.Result;
             post.CreatedDate = DateTime.MaxValue;
             return status;
         }
-        protected override Post SetupRestOfEntity(DbContext context, Post entity)
+        protected override Post SetupRestOfEntity(BloggingContext context, Post entity)
         {
             entity.NumberOfEditted = entity.NumberOfEditted+1;
             return base.SetupRestOfEntity(context, entity);
         }
-        protected override ISuccessOrErrors<Post> UpdateDataFromDto(DbContext context, Post newPost, Post oldPost)
+        protected override ISuccessOrErrors<Post> UpdateDataFromDto(BloggingContext context, Post newPost, Post oldPost)
         {
             var status = base.UpdateDataFromDto(context, newPost, oldPost);
             var post = status.Result;

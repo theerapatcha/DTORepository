@@ -14,24 +14,26 @@ using System.Threading.Tasks;
 
 namespace DTORepository.Services
 {
-    public interface ICreateOrUpdateService<TEntity>
+    public interface ICreateOrUpdateService<TContext, TEntity>
+        where TContext: DbContext
         where TEntity : class, new()
     {
         ISuccessOrErrors<TDto> CreateOrUpdate<TDto>(TDto obj, ActionFlags actions = ActionFlags.Create | ActionFlags.Update)
-            where TDto : DtoBase<TEntity, TDto>, new();
+            where TDto : DtoBase<TContext, TEntity, TDto>, new();
         Task<ISuccessOrErrors<TDto>> CreateOrUpdateAsync<TDto>(TDto obj, ActionFlags actions = ActionFlags.Create | ActionFlags.Update)
-            where TDto : DtoBase<TEntity, TDto>, new();
+            where TDto : DtoBase<TContext, TEntity, TDto>, new();
     }
-    public class CreateOrUpdateService<TEntity> : ICreateOrUpdateService<TEntity>
+    public class CreateOrUpdateService<TContext, TEntity> : ICreateOrUpdateService<TContext, TEntity>
+        where TContext: DbContext
         where TEntity : class, new()
     {
-        public DbContext dbContext { get; }
-        public CreateOrUpdateService(DbContext dbContext)
+        public TContext dbContext { get; }
+        public CreateOrUpdateService(TContext dbContext)
         {
             this.dbContext = dbContext;
         }
         public ISuccessOrErrors<TDto> CreateOrUpdate<TDto>(TDto dto, ActionFlags actions) 
-            where TDto : DtoBase<TEntity, TDto>, new()
+            where TDto : DtoBase<TContext, TEntity, TDto>, new()
         {
             
             var status = SuccessOrErrors<TDto>.SuccessWithResult(null, "Success");
@@ -58,7 +60,7 @@ namespace DTORepository.Services
         }
 
         public async Task<ISuccessOrErrors<TDto>> CreateOrUpdateAsync<TDto>(TDto dto, ActionFlags actions)
-            where TDto : DtoBase<TEntity, TDto>, new()
+            where TDto : DtoBase<TContext, TEntity, TDto>, new()
         {
             
             var status = SuccessOrErrors<TDto>.SuccessWithResult(null, "Success");
@@ -86,7 +88,7 @@ namespace DTORepository.Services
             
         }
         private ISuccessOrErrors<TDto> validateDtoState<TDto>(ISuccessOrErrors<TDto> status, TDto dto, ActionFlags flags)
-            where TDto : DtoBase<TEntity, TDto>, new()
+            where TDto : DtoBase<TContext, TEntity, TDto>, new()
         {            
             var currentItem = dto.FindItemTrackedForUpdate(dbContext);
             if (!new TDto().AllowedActions.HasFlag(ActionFlags.Update) && currentItem != null)

@@ -12,14 +12,15 @@ using System.Transactions;
 
 namespace DTORepository.Core
 {
-    public class UnitOfWork : IDisposable
+    public class UnitOfWork<TContext> : IDisposable
+        where TContext: DbContext
     {
-        DbContext dbContext;
-        public UnitOfWork(DbContext dbContext)
+        TContext dbContext;
+        public UnitOfWork(TContext dbContext)
         {
             this.dbContext = dbContext;
         }
-        public T Execute<T>(Func<DbContext, T> executeContext)
+        public T Execute<T>(Func<TContext, T> executeContext)
             where T: ISuccessOrErrors
         {
             using (var scope = new TransactionScope())
@@ -35,7 +36,7 @@ namespace DTORepository.Core
             }
         }
         
-        public async Task<T> ExecuteAsync<T>(Func<DbContext, Task<T>> executeContext)
+        public async Task<T> ExecuteAsync<T>(Func<TContext, Task<T>> executeContext)
             where T: ISuccessOrErrors
         {
             using (var scope = new TransactionScope(TransactionScopeAsyncFlowOption.Enabled))

@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DTORepositoryTest.Samples.Dtos
 {
-    class AuthorDto : DtoBase<Author, AuthorDto>
+    class AuthorDto : DtoBase<BloggingContext, Author, AuthorDto>
     {
 
         public int Id { get; set; }

@@ -15,13 +15,13 @@ namespace DTORepositoryTest
 {
     public class DTORepositoryContainterTest : UnitTestBase
     {
-        RepositoryFactory repositoryFactory;
-        IRepository<Blog> blogRepository;
+        RepositoryFactory<BloggingContext> repositoryFactory;
+        IRepository<BloggingContext, Blog> blogRepository;
         public DTORepositoryContainterTest(ITestOutputHelper output):base(output)
         {
             var mockContext = new Mock<BloggingContext>(_connection) { CallBase = true };
             mockContext.Setup(x => x.SaveChanges()).Throws(new InvalidProgramException("Mock Exception"));
-            this.repositoryFactory = new RepositoryFactory(mockContext.Object);
+            this.repositoryFactory = new RepositoryFactory<BloggingContext>(mockContext.Object);
             this.blogRepository = repositoryFactory.CreateRepository<Blog>();
 
         }

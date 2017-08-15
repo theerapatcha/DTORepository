@@ -7,16 +7,17 @@ using System.Threading.Tasks;
 
 namespace DTORepository.Core
 {
-    public class UnitOfWorkFactory
+    public class UnitOfWorkFactory<TContext>
+        where TContext : DbContext
     {
-        DbContext dbContext;
-        public UnitOfWorkFactory(DbContext dbContext)
+        TContext dbContext;
+        public UnitOfWorkFactory(TContext dbContext)
         {
             this.dbContext = dbContext;
         }
-        public UnitOfWork CreateUnitOfWork()
+        public UnitOfWork<TContext> CreateUnitOfWork()
         {
-            return new UnitOfWork(dbContext);
+            return new UnitOfWork<TContext>(dbContext);
         }
     }
 }

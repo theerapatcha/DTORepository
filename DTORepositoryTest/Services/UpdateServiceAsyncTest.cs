@@ -19,7 +19,7 @@ namespace DTORepositoryTest.Services
         public async Task TestUpdate_Blog()
         {
             var entity = this._context.Blogs.Where(x => x.BlogId == 1).First();
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = await CreateOrUpdateService.CreateOrUpdateAsync(new BlogDto
             {
                 BlogId = 1,
@@ -37,7 +37,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public async Task UpdateBlogWithPosts_WithExistingPosts()
         {
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = await CreateOrUpdateService.CreateOrUpdateAsync(new BlogWithPostsCreateDto
             {
                 BlogId = 1,
@@ -65,7 +65,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public async Task UpdateBlogWithPosts_WithoutExistingPosts_Should_DeleteExistingPosts()
         {
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = await CreateOrUpdateService.CreateOrUpdateAsync(new BlogWithPostsCreateDto
             {
                 BlogId = 1,
@@ -89,7 +89,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public async Task UpdateBlogWithPosts_WithExistingPostIds_Should()
         {
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = await CreateOrUpdateService.CreateOrUpdateAsync(new BlogWithPostIdsCreateDto
             {
                 BlogId = 1,
@@ -106,7 +106,7 @@ namespace DTORepositoryTest.Services
         [Fact]
         public async Task UpdateBlogWithPosts_RemoveAllTags()
         {
-            ICreateOrUpdateService<Blog> CreateOrUpdateService = new CreateOrUpdateService<Blog>(this._context);
+            ICreateOrUpdateService<BloggingContext, Blog> CreateOrUpdateService = new CreateOrUpdateService<BloggingContext, Blog>(this._context);
             var result = await CreateOrUpdateService.CreateOrUpdateAsync(new BlogWithPostsCreateDto
             {
                 BlogId = 1,

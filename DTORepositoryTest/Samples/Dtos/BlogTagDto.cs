@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DTORepositoryTest.Samples.Dtos
 {
-    class BlogTagDto : DtoBase<BlogTag, BlogTagDto>
+    class BlogTagDto : DtoBase<BloggingContext, BlogTag, BlogTagDto>
     {
 
         public int Id { get; set; }
@@ -22,7 +22,7 @@ namespace DTORepositoryTest.Samples.Dtos
         public string Name { get; set; }        
         public int BlogId2 { get; set; }
         protected override ActionFlags AllowedActions => ActionFlags.All;
-        protected override BlogTagDto SetupRestOfDto(DbContext context, BlogTag entity)
+        protected override BlogTagDto SetupRestOfDto(BloggingContext context, BlogTag entity)
         {
             this.BlogId2 = entity.Blog.BlogId;
             return base.SetupRestOfDto(context, entity);

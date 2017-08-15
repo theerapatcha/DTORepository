@@ -11,19 +11,19 @@ namespace DTORepositoryTest.Core
 {
     public class RepositoryTest
     {
-        IRepository<Blog> _repository;
-        Mock<ICreateOrUpdateService<Blog>> m_CreateOrUpdateService;
-        Mock<IDetailService<Blog>> m_DetailService;
-        Mock<IListService<Blog>> m_ListService;
-        Mock<IDeleteService<Blog>> m_DeleteService;
+        IRepository<BloggingContext, Blog> _repository;
+        Mock<ICreateOrUpdateService<BloggingContext, Blog>> m_CreateOrUpdateService;
+        Mock<IDetailService<BloggingContext, Blog>> m_DetailService;
+        Mock<IListService<BloggingContext, Blog>> m_ListService;
+        Mock<IDeleteService<BloggingContext, Blog>> m_DeleteService;
         public RepositoryTest()
         {
             DbContext context = new Mock<DbContext>().Object;
-            m_CreateOrUpdateService = new Mock<ICreateOrUpdateService<Blog>>();
-            m_DetailService = new Mock<IDetailService<Blog>>();
-            m_ListService = new Mock<IListService<Blog>>();
-            m_DeleteService = new Mock<IDeleteService<Blog>>();
-            _repository = new Repository<Blog>(m_CreateOrUpdateService.Object, m_DetailService.Object, m_ListService.Object, m_DeleteService.Object);
+            m_CreateOrUpdateService = new Mock<ICreateOrUpdateService<BloggingContext, Blog>>();
+            m_DetailService = new Mock<IDetailService<BloggingContext, Blog>>();
+            m_ListService = new Mock<IListService<BloggingContext, Blog>>();
+            m_DeleteService = new Mock<IDeleteService<BloggingContext, Blog>>();
+            _repository = new Repository<BloggingContext, Blog>(m_CreateOrUpdateService.Object, m_DetailService.Object, m_ListService.Object, m_DeleteService.Object);
         }
         [Fact]
         public void WhenCall_Get_Will_Trigger_DetailService_Get()

@@ -1,6 +1,6 @@
 ﻿{
   "dependencies": {
-    "AutoMapper": "6.0.2",
+    "AutoMapper": "6.1.1",
     "AutoMapper.Collection": "3.1.1",
     "AutoMapper.Collection.EntityFramework": "3.1.1",
     "EntityFramework": "6.1.3"
@@ -20,7 +20,7 @@
       "ORM",
       "Repository"
     ],
-    "releaseNotes": "Added interfaces for list service to use TEntity predicate as an arguments, Fixed bugs when there are sequence of execute operations",
+    "releaseNotes": "Breaking changes. Make the entity container as one of the type arguments so, in each dto, casting DbContext to your context is not required anymore",
     "projectUrl": "https://github.com/theerapatcha/DTORepository",
     "licenseUrl": "https://raw.githubusercontent.com/theerapatcha/DTORepository/master/LICENSE",
     "requireLicenseAcceptance": false,

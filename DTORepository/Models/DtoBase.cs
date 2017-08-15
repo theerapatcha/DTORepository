@@ -15,9 +15,10 @@ namespace DTORepository.Models
         protected internal virtual ActionFlags AllowedActions => ActionFlags.All;
     }
     
-    public abstract class DtoBase<TEntity, TDto> : DtoBase
+    public abstract class DtoBase<TContext, TEntity, TDto> : DtoBase
+        where TContext: DbContext
         where TEntity: class, new()
-        where TDto: DtoBase<TEntity, TDto>, new()
+        where TDto: DtoBase<TContext, TEntity, TDto>, new()
     {   
         public override Profile GetMapperProfile()
         {
@@ -41,7 +42,7 @@ namespace DTORepository.Models
                 {
                     var x = a;
                 }
-                var context = (DbContext) ctx.Items["DbContext"];
+                var context = (TContext) ctx.Items["DbContext"];
                 dto.SetupRestOfDto(context, entity);
             });
             
@@ -51,37 +52,37 @@ namespace DTORepository.Models
         private IMappingExpression<TDto, TEntity> CreateDtoToEntityMapping(Profile profile)
         {
             return profile.CreateMap<TDto, TEntity>()
-                .ConstructUsingExistingObject()
-                .AfterMapSetEntityState();
+                .ConstructUsingExistingObject<TContext, TDto, TEntity>()
+                .AfterMapSetEntityState<TContext, TDto, TEntity>();
         }
-        protected internal virtual TDto SetupRestOfDto(DbContext context, TEntity entity)
+        protected internal virtual TDto SetupRestOfDto(TContext context, TEntity entity)
         {
             return (TDto) this;
         }
-        protected internal virtual TEntity SetupRestOfEntity(DbContext context, TEntity entity)
+        protected internal virtual TEntity SetupRestOfEntity(TContext context, TEntity entity)
         {
             return entity;
         }
         protected internal virtual Action<IMappingExpression<TEntity, TDto>> EntityToDtoProjection => null;
-        protected internal virtual ISuccessOrErrors<TEntity> CreateDataFromDto(DbContext context, TEntity destination)
+        protected internal virtual ISuccessOrErrors<TEntity> CreateDataFromDto(TContext context, TEntity destination)
         {
             context.Set<TEntity>().Add(destination);
             return SuccessOrErrors<TEntity>.SuccessWithResult(destination, "Success");
         }
-        protected internal virtual ISuccessOrErrors<TEntity> UpdateDataFromDto(DbContext context, TEntity destination, TEntity original)
+        protected internal virtual ISuccessOrErrors<TEntity> UpdateDataFromDto(TContext context, TEntity destination, TEntity original)
         {
             context.Entry(original).State = EntityState.Detached;
             context.Entry(destination).State = EntityState.Modified;
             return SuccessOrErrors<TEntity>.SuccessWithResult(destination, "Success");
         }
-        protected internal virtual TEntity FindItemTrackedForUpdate(DbContext context)
+        protected internal virtual TEntity FindItemTrackedForUpdate(TContext context)
         {
             var keyValues = context.GetKeyValues<TEntity>(this);
             if (!keyValues.Intersect(new List<object> { null, 0 }).Any())
                 return context.Set<TEntity>().Find(keyValues);
             return null;
         }
-        protected internal virtual TEntity FindItemUntracked(DbContext context)
+        protected internal virtual TEntity FindItemUntracked(TContext context)
         {
             var keyValues = context.GetKeyValues<TEntity>(this);
             if (!keyValues.Intersect(new List<object> { null, 0 }).Any())

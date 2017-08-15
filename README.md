@@ -38,13 +38,13 @@ class User
 ##### Create a Repository
 To perform any action on the datasource, this library encourages the repository pattern to be used. Each repository will bind with only one entity. Then, a user can perform any CRUD operation on this repository via Data Transfer Object(DTO).
 ```csharp
-    RepositoryFactory repositoryFactory = new RepositoryFactory(yourDbContext);
-    IRepository<User> repository = repositoryFactory.CreateRepository<User>();
+    RepositoryFactory<YourDbContext> repositoryFactory = new RepositoryFactory<YourDbContext>(yourDbContext);
+    IRepository<YourDbContext, User> repository = repositoryFactory.CreateRepository<User>();
 ```
 ##### Create a DTO
 The DTOs is the heart of this library. To avoid having a lot of complicated logic and unmanaged source code, we can now push all DTO-related logic inside the DTO. First, Let start with a very simple DTO.
 ```csharp
-class UserDto : DTORepository.Models.DtoBase<User, UserDto>
+class UserDto : DTORepository.Models.DtoBase<YourContext, User, UserDto>
 {
     public int Id { get; set; }
     public string UserName { get; set; }
@@ -89,7 +89,7 @@ Assert.Equal("tonys", updateDto.UserName);
 #### Ignore fields from creating or updating
 If we want to update only some fields, by default the library will ignore mapping a field with null value. in DTO to entity. However, the Age field has a type of int (it cannot be set to null). So, we can change the field type of Age to int? or Nullable<int>, or we can use an Attribute called ***IgnoreMappingIfValueAttribute*** to specify the ignored value
 ```csharp
-class UserDto : DTORepository.Models.DtoBase<User, UserDto>
+class UserDto : DTORepository.Models.DtoBase<YourDbContext, User, UserDto>
 {
     //...
     public int? Age { get; set; }
@@ -113,7 +113,7 @@ Assert.Equal(23, updateDto.Age);
 
 If we want to forbid a user from updating his username, password, we can use an attribute called ***IgnoreWritingForAttribute***
 ```csharp
-class UserDto : DTORepository.Models.DtoBase<User, UserDto>
+class UserDto : DTORepository.Models.DtoBase<YourDbContext, User, UserDto>
 {
     //...
     [IgnoreWritingFor(ActionFlags.Update)]
@@ -125,7 +125,7 @@ class UserDto : DTORepository.Models.DtoBase<User, UserDto>
 ```
 Additionally, it can be used with a create action too.
 ```csharp
-class UserDto : DTORepository.Models.DtoBase<User, UserDto>
+class UserDto : DTORepository.Models.DtoBase<YourDbContext, User, UserDto>
 {
     //...
     [IgnoreWritingFor(ActionFlags.Create)]
@@ -139,13 +139,13 @@ class UserDto : DTORepository.Models.DtoBase<User, UserDto>
 ```
 Or, you can just create separate DTOs for each actions.
 ```csharp
-class UserCreateDto : DTORepository.Models.DtoBase<User, UserCreateDto>
+class UserCreateDto : DTORepository.Models.DtoBase<YourDbContext, User, UserCreateDto>
 {
     public int Id { get; set; }
     public string UserName { get; set; }
     public string Password { get; set; }
 }
-class UserUpdateDto : DTORepository.Models.DtoBase<User, UserUpdateDto>
+class UserUpdateDto : DTORepository.Models.DtoBase<YourDbContext, User, UserUpdateDto>
 {
     public int Id { get; set; }
     public string FirstName { get; set; }
@@ -155,17 +155,17 @@ class UserUpdateDto : DTORepository.Models.DtoBase<User, UserUpdateDto>
 ```
 #### Implement logics before the data is created or updated into the database
 ```csharp
-class UserDto : DTORepository.Models.DtoBase<User, UserDto>
+class UserDto : DTORepository.Models.DtoBase<YourDbContext, User, UserDto>
 {
     //...
-    protected override ISuccessOrErrors<User> CreateDataFromDto(DbContext context, User target
+    protected override ISuccessOrErrors<User> CreateDataFromDto(YourDbContext context, User target
     {
         var status = base.CreateDataFromDto(context, target);
         var user = status.Result;
         user.CreatedDate = DateTime.Now;
         return status;
     }
-    protected override ISuccessOrErrors<User> UpdateDataFromDto(DbContext context, User target, User original)
+    protected override ISuccessOrErrors<User> UpdateDataFromDto(YourDbContext context, User target, User original)
     {
         var status = base.UpdateDataFromDto(context, target, original);
         var user = status.Result;
@@ -183,13 +183,17 @@ var status = repository.Get<UserDto>(1);
 UserDto userDto = status.Result;
 ```
 We can add a logic when the library retrieving entities from the datasource and convert them to DTOs by overriding ***EntityToDtoMapping*** of a DTO class that inherits DtoBase
+
+Since the conversion process from entity to dto use the AutoMapper.ProjectTo() method, the operations that can be performed in EntityToDtoMapping are limited (https://github.com/AutoMapper/AutoMapper/wiki/Queryable-Extensions#supported-mapping-options)
+However, for complex operations, we can use method ***SetupRestOfDto*** to project entity to dto after mapping is done successfully.
+
 ```csharp
-class UserDto : DTORepository.Models.DtoBase<User, UserDto>
+class UserDto : DTORepository.Models.DtoBase<YourDbContext, User, UserDto>
 {
     //...
     public String Name { get; set; }
     //...
-    protected override Action<IMappingExpression<User, UserDto>> EntityToDtoMapping
+    protected override Action<IMappingExpression<User, UserDto>> EntityToDtoProjection
     {
         get
         {
@@ -197,25 +201,32 @@ class UserDto : DTORepository.Models.DtoBase<User, UserDto>
                 opt => opt.MapFrom(s => s.FirstName + " " + s.LastName));
         }
     }
+    protected override UserDto SetupRestOfDto(YourDbContext context, User entity)
+    {
+        // complicated logic here
+        return this;
+    }
 }
 ```
-Ps. Since the conversion process from entity to dto use the AutoMapper.ProjectTo() method, the operations that can be performed in EntityToDtoMapping are limited (https://github.com/AutoMapper/AutoMapper/wiki/Queryable-Extensions#supported-mapping-options)
 
 ### List entities by predicate
+We can using entity predicate (Expression<Func<TEntity, bool>) to query dtos.
 ```csharp
 ISuccessOrErrors<IList<UserDto>> status = repository.Query<UserDto>(x => x.FirstName == "John");
 IList<UserDto> userDto = status.Result;
 ```
 ### Get queryable object of DTOs
+This method also accepts entity predicate as an argument too.
 ```csharp
-IQueryable<UserDto> userDtoQuery = repository.List<UserDto>();
+IQueryable<UserDto> userDtoQuery = repository.List<UserDto>(e => e.EntityProperty == SomeVal).Where(d => d.DtoProperty == SomeVal);
 ```
+
 
 #### Ignore fields from reading or listing
 Same as *create* or *update*, *get* or *list* can be treated as different actions. We can use
 ***IgnoreRetreivingForAttribute*** to specify which fields to ignore for specific actions.
 ```csharp
-class UserDto : DTORepository.Models.DtoBase<User, UserDto>
+class UserDto : DTORepository.Models.DtoBase<YourDbContext, User, UserDto>
 {
     //...
     [IgnoreRetreivingFor(ActionFlags.Get | ActionFlags.List)]
@@ -232,7 +243,7 @@ In case of your DTO class contains lists of other DTOs as well. The fields in th
 
 Hence, We can create 2 DTOs based on the requirements
 ```csharp
-class BlogDto : DTORepository.Models.DtoBase<Blog, BlogDto> {
+class BlogDto : DTORepository.Models.DtoBase<YourDbContext, Blog, BlogDto> {
     public int Id { get; set; }
     [IgnoreRetreivingFor(ActionFlags.List)]
     public ICollection<PostDto> Posts { get; set; }
@@ -256,7 +267,7 @@ class PostDto : DTORepository.Models.DtoBase<Post, PostDto> {
 ```
 Then, perform an action to retrieve data
 ```csharp
-IRepository<Blog> blogRepository = repositoryFactory.CreateRepository<Blog>();
+IRepository<YourDbContext, Blog> blogRepository = repositoryFactory<YourDbContext>.CreateRepository<Blog>();
 // --- list action ---
 IList<BlogDto> blogDtos = blogRepository.List<BlogDto>().ToList();
 // blogDtos[i].Posts will be null
@@ -279,8 +290,8 @@ ISuccessOrErrors status = repository.Delete(1); // delete a User entity with Id 
 Normally, every repository operation will perform **dbContext.SaveChanges()** on itself. However, if there is a requirement to perform many operations as a transaction, we can use the library's ***UnitOfWork*** implementation to wrap operations together as a single transaction.
 ```csharp
 //...
-UnitOfWorkFactory unitOfWorkFactory = new UnitOfWorkFactory(dbContext);
-UnitOfWork uow = unitOfWorkFactory.CreateUnitOfWork();
+UnitOfWorkFactory<YourDbContext> unitOfWorkFactory = new UnitOfWorkFactory<YourDbContext>(dbContext);
+UnitOfWork<YourDbContext> uow = unitOfWorkFactory.CreateUnitOfWork();
 ISuccessOrErrors status = uow.Execute((dbContext) => {
     var status = repository.Create(newUserDto);
     status.Combine(blogRepository.Update(updatedBlogDto));

@@ -40,27 +40,29 @@ namespace DTORepository.Internal
             t.IsClass && !t.IsAbstract && t.IsSubclassOf(typeof(Mappable)));
             return allDtoTypes;
         }
-        public static IMappingExpression<TDto, TEntity> ConstructUsingExistingObject<TDto, TEntity>(this IMappingExpression<TDto, TEntity> expression)
+        public static IMappingExpression<TDto, TEntity> ConstructUsingExistingObject<TContext, TDto, TEntity>(this IMappingExpression<TDto, TEntity> expression)
+            where TContext : DbContext
             where TEntity : class, new()
-            where TDto : DtoBase<TEntity, TDto>, new()
+            where TDto : DtoBase<TContext, TEntity, TDto>, new()
         {
             expression.ConstructUsing((src, opts) =>
             {
-                var dbContext = (DbContext)opts.Options.Items["DbContext"];
+                var dbContext = (TContext)opts.Options.Items["DbContext"];
                 var srcEntity = src.FindItemTrackedForUpdate(dbContext);
                 if (srcEntity == null) return dbContext.Set<TEntity>().Create();
                 return srcEntity;
             });
             return expression;
         }
-        public static IMappingExpression<TDto, TEntity> AfterMapSetEntityState<TDto, TEntity>(this IMappingExpression<TDto, TEntity> expression)
+        public static IMappingExpression<TDto, TEntity> AfterMapSetEntityState<TContext, TDto, TEntity>(this IMappingExpression<TDto, TEntity> expression)
+            where TContext: DbContext
             where TEntity: class, new()
-            where TDto: DtoBase<TEntity, TDto>, new()
+            where TDto: DtoBase<TContext, TEntity, TDto>, new()
         {
             expression.AfterMap((src, dest, opts) =>
              {
                  var status = (ISuccessOrErrors)opts.Options.Items["CurrentStatus"];
-                 var dbContext = (DbContext)opts.Options.Items["DbContext"];
+                 var dbContext = (TContext)opts.Options.Items["DbContext"];
                  var srcEntity = src.FindItemUntracked(dbContext);
                  if (srcEntity == null)
                  {
@@ -185,9 +187,10 @@ namespace DTORepository.Internal
         //        ));
         //    return expression;
         //}
-        public static IQueryable<TDto> GetQueryable<TEntity, TDto>(this DbContext dbContext, IMapper mapper, Dictionary<string, object> parameters)
+        public static IQueryable<TDto> GetQueryable<TContext, TEntity, TDto>(this TContext dbContext, IMapper mapper, Dictionary<string, object> parameters)
+            where TContext : DbContext
             where TEntity : class, new()
-            where TDto : DtoBase<TEntity, TDto>, new()
+            where TDto : DtoBase<TContext, TEntity, TDto>, new()
         {
             return dbContext.Set<TEntity>()
                 .UseAsDataSource(mapper)

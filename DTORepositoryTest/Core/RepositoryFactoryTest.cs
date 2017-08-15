@@ -13,12 +13,12 @@ namespace DTORepositoryTest.Core
 {
     public class RepositoryFactoryTest
     {
-        RepositoryFactory _factory;
+        RepositoryFactory<BloggingContext> _factory;
         
         public RepositoryFactoryTest()
         {
-            DbContext context = new Mock<DbContext>().Object;
-            _factory = new RepositoryFactory(context);
+            BloggingContext context = new Mock<BloggingContext>().Object;
+            _factory = new RepositoryFactory<BloggingContext>(context);
         }
         [Fact]
         public void Create_Repository_With_Correct_GenericType()
@@ -26,7 +26,7 @@ namespace DTORepositoryTest.Core
             // when
             var repository = _factory.CreateRepository<Blog>();
             // then
-            Assert.IsType<Repository<Blog>>(repository);
+            Assert.IsType<Repository<BloggingContext, Blog>>(repository);
         }
     }
 }

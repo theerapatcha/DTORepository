@@ -10,19 +10,19 @@ using System.Threading.Tasks;
 
 namespace DTORepositoryTest.Samples.Dtos
 {
-    class BlogUpdateDto : DtoBase<Blog, BlogUpdateDto>
+    class BlogUpdateDto : DtoBase<BloggingContext, Blog, BlogUpdateDto>
     {
         public int BlogId { get; set; }
         public string Name { get; set; }
         protected override ActionFlags AllowedActions => ActionFlags.Update;
-        protected override ISuccessOrErrors<Blog> CreateDataFromDto(DbContext context, Blog newBlog)
+        protected override ISuccessOrErrors<Blog> CreateDataFromDto(BloggingContext context, Blog newBlog)
         {
             var status = base.CreateDataFromDto(context, newBlog);
             var blog = status.Result;
             blog.CreatedDate = DateTime.MaxValue;
             return status;
         }
-        protected override ISuccessOrErrors<Blog> UpdateDataFromDto(DbContext context, Blog newBlog, Blog oldBlog)
+        protected override ISuccessOrErrors<Blog> UpdateDataFromDto(BloggingContext context, Blog newBlog, Blog oldBlog)
         {
             var status = base.UpdateDataFromDto(context, newBlog, oldBlog);
             var blog = status.Result;

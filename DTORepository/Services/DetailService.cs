@@ -14,24 +14,26 @@ using System.Threading.Tasks;
 
 namespace DTORepository.Services
 {
-    public interface IDetailService<TEntity>
+    public interface IDetailService<TContext, TEntity>
+        where TContext: DbContext
         where TEntity : class, new()
     {
         ISuccessOrErrors<TDto> Get<TDto>(params object[] identifiers)
-            where TDto : DtoBase<TEntity, TDto>, new();
+            where TDto : DtoBase<TContext, TEntity, TDto>, new();
         Task<ISuccessOrErrors<TDto>> GetAsync<TDto>(params object[] identifiers)
-            where TDto : DtoBase<TEntity, TDto>, new();
+            where TDto : DtoBase<TContext, TEntity, TDto>, new();
     }
-    public class DetailService<TEntity> : IDetailService<TEntity>
+    public class DetailService<TContext, TEntity> : IDetailService<TContext, TEntity>
+        where TContext : DbContext
         where TEntity : class, new()
     {
-        public DbContext dbContext { get; }
-        public DetailService(DbContext dbContext)
+        public TContext dbContext { get; }
+        public DetailService(TContext dbContext)
         {
             this.dbContext = dbContext;
         }
         public ISuccessOrErrors<TDto> Get<TDto>(params object[] identifiers)
-            where TDto : DtoBase<TEntity, TDto>, new()
+            where TDto : DtoBase<TContext, TEntity, TDto>, new()
         {
             var status = new SuccessOrErrors<TDto>();
 
@@ -53,7 +55,7 @@ namespace DTORepository.Services
         }
 
         public async Task<ISuccessOrErrors<TDto>> GetAsync<TDto>(params object[] identifiers)
-           where TDto : DtoBase<TEntity, TDto>, new()
+           where TDto : DtoBase<TContext, TEntity, TDto>, new()
         {
             var status = new SuccessOrErrors<TDto>();
 
