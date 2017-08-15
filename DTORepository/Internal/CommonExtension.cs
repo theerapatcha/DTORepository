@@ -55,7 +55,12 @@ namespace DTORepository.Internal
             }
             if (type.IsSubclassOf(typeof(DtoBase)))
             {
-                return type.BaseType.GenericTypeArguments[1];
+                Type baseType = type;
+                do
+                {
+                    baseType = baseType.BaseType;
+                } while (baseType.MetadataToken != typeof(DtoBase<,,>).MetadataToken);
+                return baseType.GenericTypeArguments[1];
             }
             return type;
         }
